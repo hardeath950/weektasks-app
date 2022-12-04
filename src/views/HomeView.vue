@@ -4,6 +4,6 @@ import HelloWorld from "@/components/HelloWorld.vue";
 
 <template>
   <main>
-    <HelloWorld msg="world" />
+    <HelloWorld name="world" />
   </main>
 </template>
