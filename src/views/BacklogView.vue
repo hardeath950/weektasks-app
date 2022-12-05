@@ -10,7 +10,9 @@
     </ul>
     <form @submit="createIssue">
       <input v-model="issueTitle" data-testid="issue-title-input" />
-      <button data-testid="create-issue-btn">Add</button>
+      <button data-testid="create-issue-btn">
+        <el-icon><Plus /></el-icon>
+      </button>
     </form>
   </main>
 </template>
@@ -18,7 +20,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import axios from "axios";
-import { Delete } from "@element-plus/icons-vue";
+import { Delete, Plus } from "@element-plus/icons-vue";
 
 const issues = ref<any[]>([]);
 const issueTitle = ref("");
