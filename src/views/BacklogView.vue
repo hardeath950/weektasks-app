@@ -76,17 +76,20 @@ async function fetchEpics() {
 
 async function createIssue() {
   const issue = { title: issueTitle.value };
+  let response;
 
-  if (issueTypeTarget.value === "issue") {
-    let data = await axios
+  if (issueTypeTarget.value === "issue")
+    response = await axios
       .post<any[]>("http://localhost:3000/issues", issue)
       .then((res) => res.data);
-    issues.value.push(data);
+
+  if (issueTypeTarget.value === "epic") {
+    response = await axios
+      .post<any[]>("http://localhost:3000/epics", issue)
+      .then((res) => res.data);
   }
 
-  if (issueTypeTarget.value === "epic")
-    await axios.post<any[]>("http://localhost:3000/epics", issue);
-
+  issues.value.push(response);
   issueTitle.value = "";
 }
 
