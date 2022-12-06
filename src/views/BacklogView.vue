@@ -10,6 +10,11 @@
         </li>
       </ul>
       <form @submit.prevent="createIssue">
+        <select v-model="issueTypeTarget">
+          <option v-for="issueType in issueTypes" :key="issueType">
+            {{ issueType === "issue" ? "Questõe" : "Épica" }}
+          </option>
+        </select>
         <input v-model="issueTitle" data-testid="issue-title-input" />
         <button data-testid="create-issue-btn">
           <el-icon><Plus /></el-icon>
@@ -43,6 +48,10 @@ import { Delete, Plus } from "@element-plus/icons-vue";
 
 const issues = ref<any[]>([]);
 const issueTitle = ref("");
+
+type IssueType = "issue" | "epic";
+const issueTypes = ["issue", "epic"];
+const issueTypeTarget = ref<IssueType>("issue");
 
 onMounted(async () => {
   let { data } = await axios.get<any[]>("http://localhost:3000/issues");
