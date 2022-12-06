@@ -1,19 +1,29 @@
 <template>
   <main class="backlog">
-    <ul>
-      <li v-for="issue in issues" :key="issue.id">
-        {{ issue.title }}
-        <button @click="removeIssue(issue.id)">
-          <el-icon><Delete /></el-icon>
+    <div class="issues">
+      <ul>
+        <li v-for="issue in issues" :key="issue.id">
+          {{ issue.title }}
+          <button @click="removeIssue(issue.id)">
+            <el-icon><Delete /></el-icon>
+          </button>
+        </li>
+      </ul>
+      <form @submit.prevent="createIssue">
+        <input v-model="issueTitle" data-testid="issue-title-input" />
+        <button data-testid="create-issue-btn">
+          <el-icon><Plus /></el-icon>
         </button>
-      </li>
-    </ul>
-    <form @submit="createIssue">
-      <input v-model="issueTitle" data-testid="issue-title-input" />
-      <button data-testid="create-issue-btn">
-        <el-icon><Plus /></el-icon>
-      </button>
-    </form>
+      </form>
+    </div>
+    <div class="sprints">
+      <form @submit.prevent="createSprint">
+        <input v-model="sprintTitle" />
+        <button>
+          <el-icon><Plus /></el-icon>
+        </button>
+      </form>
+    </div>
   </main>
 </template>
 
@@ -40,6 +50,13 @@ async function createIssue() {
 async function removeIssue(issueId: number) {
   await axios.delete<any[]>("http://localhost:3000/issues/" + issueId);
   issues.value = issues.value.filter((i) => i.id !== issueId);
+}
+
+const sprintTitle = ref("");
+
+async function createSprint() {
+  const sprint = { title: sprintTitle.value };
+  await axios.post("http://localhost:3000/sprints", sprint);
 }
 </script>
 
