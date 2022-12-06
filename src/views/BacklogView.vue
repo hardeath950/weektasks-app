@@ -54,7 +54,10 @@ async function removeIssue(issueId: number) {
 
 const sprintTitle = ref("");
 
-async function createSprint() {}
+async function createSprint() {
+  const sprint = { title: sprintTitle.value };
+  await axios.post("http://localhost:3000/sprints", sprint);
+}
 </script>
 
 <style scoped></style>
