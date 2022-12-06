@@ -21,6 +21,9 @@
       <ul>
         <li v-for="sprint in sprints" :key="sprint.id">
           {{ sprint.title }}
+          <button @click="removeSprint(sprint.id)">
+            <el-icon><Delete /></el-icon>
+          </button>
         </li>
       </ul>
       <form @submit.prevent="createSprint">
