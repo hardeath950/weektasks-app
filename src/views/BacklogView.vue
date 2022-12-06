@@ -4,7 +4,7 @@
       <ul>
         <li v-for="issue in issues" :key="issue.id">
           {{ issue.title }}
-          <button @click="removeIssue(issue.id)">
+          <button @click="removeIssue(issue.issueType, issue.id)">
             <el-icon><Delete /></el-icon>
           </button>
         </li>
@@ -58,6 +58,9 @@ type IssueType = "issue" | "epic";
 const issueTypes = ["issue", "epic"];
 const issueTypeTarget = ref<IssueType>("issue");
 
+const asIssue = (issue: any) => ({ issueType: "issue" as IssueType, ...issue });
+const asEpic = (issue: any) => ({ issueType: "epic" as IssueType, ...issue });
+
 onMounted(async () => {
   issues.value = await Promise.all([fetchIssues(), fetchEpics()])
     .then(([epics, issues]) => [...epics, ...issues])
@@ -65,13 +68,13 @@ onMounted(async () => {
 });
 
 async function fetchIssues() {
-  let { data } = await axios.get<any[]>("http://localhost:3000/epics");
-  return data.map((issue) => ({ issueType: "epic", ...issue }));
+  let { data } = await axios.get<any[]>("http://localhost:3000/issues");
+  return data.map((issue) => asIssue(issue));
 }
 
 async function fetchEpics() {
-  let { data } = await axios.get<any[]>("http://localhost:3000/issues");
-  return data.map((epic) => ({ type: "epic", ...epic }));
+  let { data } = await axios.get<any[]>("http://localhost:3000/epics");
+  return data.map((epic) => asEpic(epic));
 }
 
 async function createIssue() {
@@ -81,21 +84,27 @@ async function createIssue() {
   if (issueTypeTarget.value === "issue")
     response = await axios
       .post<any[]>("http://localhost:3000/issues", issue)
-      .then((res) => res.data);
+      .then((res) => asIssue(res.data));
 
   if (issueTypeTarget.value === "epic") {
     response = await axios
       .post<any[]>("http://localhost:3000/epics", issue)
-      .then((res) => res.data);
+      .then((res) => asEpic(res.data));
   }
 
   issues.value.push(response);
   issueTitle.value = "";
 }
 
-async function removeIssue(issueId: number) {
-  await axios.delete<any[]>("http://localhost:3000/issues/" + issueId);
-  issues.value = issues.value.filter((i) => i.id !== issueId);
+async function removeIssue(issueType: IssueType, id: number) {
+  if (issueType === "issue")
+    await axios.delete("http://localhost:3000/issues/" + id);
+  else if (issueType === "epic")
+    await axios.delete("http://localhost:3000/epics/" + id);
+
+  issues.value = issues.value.filter(
+    (i) => !(i.issueType === issueType && i.id === id)
+  );
 }
 
 const sprintTitle = ref("");
