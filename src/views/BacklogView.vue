@@ -59,10 +59,7 @@ onMounted(async () => {
 });
 
 async function createIssue() {
-  const issue = {
-    title: issueTitle.value,
-    type: issueTypeTarget.value,
-  };
+  const issue = { title: issueTitle.value };
 
   let response;
 
