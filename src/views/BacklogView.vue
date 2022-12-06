@@ -69,4 +69,23 @@ async function createSprint() {
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.backlog {
+  display: flex;
+  gap: 20px;
+}
+
+.issues {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 0 5px #aaa;
+}
+
+.sprints {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 0 5px #aaa;
+}
+</style>
