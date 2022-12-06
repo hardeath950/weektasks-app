@@ -9,7 +9,7 @@
           </button>
         </li>
       </ul>
-      <form @submit="createIssue">
+      <form @submit.prevent="createIssue">
         <input v-model="issueTitle" data-testid="issue-title-input" />
         <button data-testid="create-issue-btn">
           <el-icon><Plus /></el-icon>
@@ -17,7 +17,7 @@
       </form>
     </div>
     <div class="sprints">
-      <form @submit="createSprint">
+      <form @submit.prevent="createSprint">
         <input v-model="sprintTitle" />
         <button>
           <el-icon><Plus /></el-icon>
