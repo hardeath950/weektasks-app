@@ -59,9 +59,24 @@ onMounted(async () => {
 });
 
 async function createIssue() {
-  const issue = { title: issueTitle.value };
-  let { data } = await axios.post<any[]>("http://localhost:3000/issues", issue);
-  issues.value.push(data);
+  const issue = {
+    title: issueTitle.value,
+    type: issueTypeTarget.value,
+  };
+
+  let response;
+
+  if (issueTypeTarget.value === "issue")
+    response = await axios
+      .post<any[]>("http://localhost:3000/issues", issue)
+      .then((res) => res.data);
+
+  if (issueTypeTarget.value === "epic")
+    response = await axios
+      .post<any[]>("http://localhost:3000/epics", issue)
+      .then((res) => res.data);
+
+  issues.value.push(response);
   issueTitle.value = "";
 }
 
