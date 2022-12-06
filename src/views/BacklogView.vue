@@ -11,7 +11,11 @@
       </ul>
       <form @submit.prevent="createIssue">
         <select v-model="issueTypeTarget">
-          <option v-for="issueType in issueTypes" :key="issueType">
+          <option
+            v-for="issueType in issueTypes"
+            :key="issueType"
+            :value="issueType"
+          >
             {{ issueType === "issue" ? "Questõe" : "Épica" }}
           </option>
         </select>
