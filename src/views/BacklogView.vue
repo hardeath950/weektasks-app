@@ -10,6 +10,11 @@
         </li>
       </ul>
       <form @submit.prevent="createIssue">
+        <select v-model="issueTypeTarget">
+          <option v-for="issueType in issueTypes" :key="issueType">
+            {{ issueType === "issue" ? "Questõe" : "Épica" }}
+          </option>
+        </select>
         <input v-model="issueTitle" data-testid="issue-title-input" />
         <button data-testid="create-issue-btn">
           <el-icon><Plus /></el-icon>
@@ -44,6 +49,10 @@ import { Delete, Plus } from "@element-plus/icons-vue";
 const issues = ref<any[]>([]);
 const issueTitle = ref("");
 
+type IssueType = "issue" | "epic";
+const issueTypes = ["issue", "epic"];
+const issueTypeTarget = ref<IssueType>("issue");
+
 onMounted(async () => {
   let { data } = await axios.get<any[]>("http://localhost:3000/issues");
   issues.value = data;
@@ -51,8 +60,17 @@ onMounted(async () => {
 
 async function createIssue() {
   const issue = { title: issueTitle.value };
-  let { data } = await axios.post<any[]>("http://localhost:3000/issues", issue);
-  issues.value.push(data);
+
+  if (issueTypeTarget.value === "issue") {
+    let data = await axios
+      .post<any[]>("http://localhost:3000/issues", issue)
+      .then((res) => res.data);
+    issues.value.push(data);
+  }
+
+  if (issueTypeTarget.value === "epic")
+    await axios.post<any[]>("http://localhost:3000/epics", issue);
+
   issueTitle.value = "";
 }
 
