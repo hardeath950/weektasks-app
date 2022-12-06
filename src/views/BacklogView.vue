@@ -16,7 +16,13 @@
         </button>
       </form>
     </div>
+
     <div class="sprints">
+      <ul>
+        <li v-for="sprint in sprints" :key="sprint.id">
+          {{ sprint.title }}
+        </li>
+      </ul>
       <form @submit.prevent="createSprint">
         <input v-model="sprintTitle" />
         <button>
