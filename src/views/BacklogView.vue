@@ -21,6 +21,9 @@
       <ul>
         <li v-for="sprint in sprints" :key="sprint.id">
           {{ sprint.title }}
+          <button @click="removeSprint(sprint.id)">
+            <el-icon><Delete /></el-icon>
+          </button>
         </li>
       </ul>
       <form @submit.prevent="createSprint">
@@ -71,6 +74,11 @@ async function createSprint() {
   let { data } = await axios.post("http://localhost:3000/sprints", sprint);
   sprints.value.push(data);
   sprintTitle.value = "";
+}
+
+async function removeSprint(id: number) {
+  await axios.delete("http://localhost:3000/sprints/" + id);
+  sprints.value = sprints.value.filter((s) => s.id !== id);
 }
 </script>
 
