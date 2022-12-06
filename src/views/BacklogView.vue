@@ -75,6 +75,11 @@ async function createSprint() {
   sprints.value.push(data);
   sprintTitle.value = "";
 }
+
+async function removeSprint(id: number) {
+  await axios.delete("http://localhost:3000/sprints/" + id);
+  sprints.value = sprints.value.filter((s) => s.id !== id);
+}
 </script>
 
 <style scoped>
