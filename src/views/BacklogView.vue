@@ -16,7 +16,13 @@
         </button>
       </form>
     </div>
+
     <div class="sprints">
+      <ul>
+        <li v-for="sprint in sprints" :key="sprint.id">
+          {{ sprint.title }}
+        </li>
+      </ul>
       <form @submit.prevent="createSprint">
         <input v-model="sprintTitle" />
         <button>
@@ -53,11 +59,38 @@ async function removeIssue(issueId: number) {
 }
 
 const sprintTitle = ref("");
+const sprints = ref<any[]>([]);
+
+onMounted(async () => {
+  let { data } = await axios.get<any[]>("http://localhost:3000/sprints");
+  sprints.value = data;
+});
 
 async function createSprint() {
   const sprint = { title: sprintTitle.value };
-  await axios.post("http://localhost:3000/sprints", sprint);
+  let { data } = await axios.post("http://localhost:3000/sprints", sprint);
+  sprints.value.push(data);
+  sprintTitle.value = "";
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.backlog {
+  display: flex;
+  gap: 20px;
+}
+
+.issues {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 0 5px #aaa;
+}
+
+.sprints {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  box-shadow: 0 0 5px #aaa;
+}
+</style>
