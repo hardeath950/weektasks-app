@@ -49,6 +49,7 @@
 import { ref, onMounted } from "vue";
 import axios from "axios";
 import { Delete, Plus } from "@element-plus/icons-vue";
+import { sortBy } from "lodash";
 
 const issues = ref<any[]>([]);
 const issueTitle = ref("");
@@ -58,23 +59,37 @@ const issueTypes = ["issue", "epic"];
 const issueTypeTarget = ref<IssueType>("issue");
 
 onMounted(async () => {
-  let { data } = await axios.get<any[]>("http://localhost:3000/issues");
-  issues.value = data;
+  issues.value = await Promise.all([fetchIssues(), fetchEpics()])
+    .then(([epics, issues]) => [...epics, ...issues])
+    .then((issues) => sortBy(issues, "createdAt"));
 });
+
+async function fetchIssues() {
+  let { data } = await axios.get<any[]>("http://localhost:3000/epics");
+  return data.map((issue) => ({ issueType: "epic", ...issue }));
+}
+
+async function fetchEpics() {
+  let { data } = await axios.get<any[]>("http://localhost:3000/issues");
+  return data.map((epic) => ({ type: "epic", ...epic }));
+}
 
 async function createIssue() {
   const issue = { title: issueTitle.value };
+  let response;
 
-  if (issueTypeTarget.value === "issue") {
-    let data = await axios
+  if (issueTypeTarget.value === "issue")
+    response = await axios
       .post<any[]>("http://localhost:3000/issues", issue)
       .then((res) => res.data);
-    issues.value.push(data);
+
+  if (issueTypeTarget.value === "epic") {
+    response = await axios
+      .post<any[]>("http://localhost:3000/epics", issue)
+      .then((res) => res.data);
   }
 
-  if (issueTypeTarget.value === "epic")
-    await axios.post<any[]>("http://localhost:3000/epics", issue);
-
+  issues.value.push(response);
   issueTitle.value = "";
 }
 
