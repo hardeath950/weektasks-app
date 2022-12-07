@@ -1,13 +1,13 @@
 <template>
   <div class="epic">
     <div>
-      {{ issue.title }}
-      <button @click="removeEpic(issue.id)">
+      {{ epic.title }}
+      <button @click="removeEpic(epic.id)">
         <el-icon><Delete /></el-icon>
       </button>
     </div>
     <ul>
-      <li v-for="issue in issues" :key="issue.id">
+      <li v-for="issue in epic.issues" :key="issue.id">
         {{ issue.title }}
         <button @click="removeIssue(issue.id)">
           <el-icon><Delete /></el-icon>
@@ -26,21 +26,24 @@
 <script lang="ts" setup>
 import { ref } from "vue";
 import axios from "axios";
-import type { Issue } from "./issue.model";
+import type { Epic } from "./issue.model";
 
 let props = defineProps<{
-  issue: Issue;
-  issues: Issue[];
+  epic: Epic;
 }>();
 
-let emit = defineEmits(["remove", "update:issues"]);
+let emit = defineEmits(["remove", "update:issue"]);
 
 const issueTitle = ref("");
 
 async function createIssue() {
-  const issue = { title: issueTitle.value, epic: props.issue };
+  const issue = { title: issueTitle.value, epic: props.epic };
   let { data } = await axios.post("http://localhost:3000/issues", issue);
-  emit("update:issues", [...props.issues, data]);
+  let epic = {
+    ...props.epic,
+    issues: [...props.epic.issues, data],
+  };
+  emit("update:issue", epic);
   issueTitle.value = "";
 }
 
@@ -50,7 +53,8 @@ function removeEpic(id: number) {
 
 async function removeIssue(id: number) {
   await axios.delete("http://localhost:3000/issues/" + id);
-  let issues = props.issues.filter((i) => i.id !== id);
-  emit("update:issues", issues);
+  let issues = props.epic.issues.filter((i) => i.id !== id);
+  let epic = { ...props.epic, issues };
+  emit("update:issue", epic);
 }
 </script>

@@ -2,11 +2,10 @@
   <main class="backlog">
     <div class="issues">
       <ul>
-        <li v-for="issue in issues" :key="issue.id">
+        <li v-for="(issue, i) in issues" :key="issue.id">
           <EpicItem
             v-if="issue.issueType === 'epic'"
-            :issue="issue"
-            v-model:issues="issue.issues"
+            v-model:epic="issues[i]"
             @remove="removeIssue"
           />
           <IssueItem v-else :issue="issue" @remove="removeIssue" />
