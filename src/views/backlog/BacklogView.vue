@@ -3,10 +3,12 @@
     <div class="issues">
       <ul>
         <li v-for="issue in issues" :key="issue.id">
-          {{ issue.title }}
-          <button @click="removeIssue(issue.issueType, issue.id)">
-            <el-icon><Delete /></el-icon>
-          </button>
+          <EpicItem
+            v-if="issue.issueType === 'epic'"
+            :issue="issue"
+            @remove="removeIssue"
+          />
+          <IssueItem v-else :issue="issue" @remove="removeIssue" />
         </li>
       </ul>
       <form @submit.prevent="createIssue">
@@ -50,6 +52,8 @@ import { ref, onMounted } from "vue";
 import axios from "axios";
 import { Delete, Plus } from "@element-plus/icons-vue";
 import { sortBy } from "lodash";
+import EpicItem from "./EpicItem.vue";
+import IssueItem from "./IssueItem.vue";
 
 const issues = ref<any[]>([]);
 const issueTitle = ref("");
