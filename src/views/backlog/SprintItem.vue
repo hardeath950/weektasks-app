@@ -5,8 +5,18 @@
       <el-icon><Delete /></el-icon>
     </button>
   </div>
-  <form @submit.prevent="createSprint">
-    <input v-model="sprintTitle" />
+  <div>
+    <ul>
+      <li v-for="issue in issues" :key="issue.id">
+        {{ issue.title }}
+        <button @click="removeIssue(issue.id)">
+          <el-icon><Delete /></el-icon>
+        </button>
+      </li>
+    </ul>
+  </div>
+  <form @submit.prevent="createIssue">
+    <input v-model="issueTitle" />
     <button type="submit">
       <el-icon><Plus /></el-icon>
     </button>
@@ -26,15 +36,22 @@ let props = defineProps<{
 
 let emit = defineEmits(["remove", "update:issues"]);
 
-let sprintTitle = ref("");
+let issueTitle = ref("");
 
-async function createSprint() {
-  let issue = { title: sprintTitle.value, sprint: { id: props.sprint.id } };
+async function createIssue() {
+  let issue = { title: issueTitle.value, sprint: { id: props.sprint.id } };
   let { data } = await axios.post("http://localhost:3000/issues", issue);
   emit("update:issues", [...props.issues, data]);
+  issueTitle.value = "";
 }
 
 function removeSprint(id: number) {
   emit("remove", id);
+}
+
+async function removeIssue(id: number) {
+  await axios.delete("http://localhost:3000/issues/" + id);
+  let issues = props.issues.filter((i) => i.id !== id);
+  emit("update:issues", issues);
 }
 </script>

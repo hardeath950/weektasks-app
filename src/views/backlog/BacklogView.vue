@@ -2,12 +2,11 @@
   <main class="backlog">
     <div class="issues">
       <ul>
-        <li v-for="issue in issues" :key="issue.id">
+        <li v-for="(issue, i) in issues" :key="issue.id">
           <EpicItem
             v-if="issue.issueType === 'epic'"
-            :issue="issue"
-            v-model:issues="issue.issues"
-            @remove="removeIssue"
+            v-model:epic="issues[i]"
+            @remove="removeEpic"
           />
           <IssueItem v-else :issue="issue" @remove="removeIssue" />
         </li>
@@ -52,7 +51,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import axios from "axios";
-import { Delete, Plus } from "@element-plus/icons-vue";
 import { sortBy } from "lodash";
 import EpicItem from "./EpicItem.vue";
 import IssueItem from "./IssueItem.vue";
@@ -66,7 +64,11 @@ const issueTypes = ["issue", "epic"];
 const issueTypeTarget = ref<IssueType>("issue");
 
 const asIssue = (issue: any) => ({ issueType: "issue" as IssueType, ...issue });
-const asEpic = (issue: any) => ({ issueType: "epic" as IssueType, ...issue });
+const asEpic = (issue: any) => ({
+  issueType: "epic" as IssueType,
+  ...issue,
+  issues: issue.issues || [],
+});
 
 onMounted(async () => {
   issues.value = await Promise.all([fetchIssues(), fetchEpics()])
@@ -103,14 +105,19 @@ async function createIssue() {
   issueTitle.value = "";
 }
 
-async function removeIssue(issueType: IssueType, id: number) {
-  if (issueType === "issue")
-    await axios.delete("http://localhost:3000/issues/" + id);
-  else if (issueType === "epic")
-    await axios.delete("http://localhost:3000/epics/" + id);
+async function removeIssue(id: number) {
+  await axios.delete("http://localhost:3000/issues/" + id);
 
   issues.value = issues.value.filter(
-    (i) => !(i.issueType === issueType && i.id === id)
+    (i) => !(i.issueType === "issue" && i.id === id)
+  );
+}
+
+async function removeEpic(id: number) {
+  await axios.delete("http://localhost:3000/epics/" + id);
+
+  issues.value = issues.value.filter(
+    (i) => !(i.issueType === "epic" && i.id === id)
   );
 }
 
