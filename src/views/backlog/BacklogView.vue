@@ -132,6 +132,7 @@ onMounted(async () => {
 async function createSprint() {
   const sprint = { title: sprintTitle.value };
   let { data } = await axios.post("http://localhost:3000/sprints", sprint);
+  data.issues = [];
   sprints.value.push(data);
   sprintTitle.value = "";
 }
