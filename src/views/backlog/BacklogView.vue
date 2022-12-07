@@ -32,10 +32,11 @@
     <div class="sprints">
       <ul>
         <li v-for="sprint in sprints" :key="sprint.id">
-          {{ sprint.title }}
-          <button @click="removeSprint(sprint.id)">
-            <el-icon><Delete /></el-icon>
-          </button>
+          <SprintItem
+            :sprint="sprint"
+            v-model:issues="sprint.issues"
+            @remove="removeSprint(sprint.id)"
+          />
         </li>
       </ul>
       <form @submit.prevent="createSprint">
@@ -55,6 +56,7 @@ import { Delete, Plus } from "@element-plus/icons-vue";
 import { sortBy } from "lodash";
 import EpicItem from "./EpicItem.vue";
 import IssueItem from "./IssueItem.vue";
+import SprintItem from "./SprintItem.vue";
 
 const issues = ref<any[]>([]);
 const issueTitle = ref("");
