@@ -15,6 +15,6 @@ defineProps<{
 let emit = defineEmits(["remove"]);
 
 function removeIssue(id: number) {
-  emit("remove", "issue", id);
+  emit("remove", id);
 }
 </script>
