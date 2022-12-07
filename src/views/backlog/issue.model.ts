@@ -1,5 +1,8 @@
 export interface Issue {
   id: number;
   title: string;
-  issues?: Issue[];
+}
+
+export interface Epic extends Issue {
+  issues: Issue[];
 }
