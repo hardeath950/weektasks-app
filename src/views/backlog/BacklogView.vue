@@ -65,7 +65,11 @@ const issueTypes = ["issue", "epic"];
 const issueTypeTarget = ref<IssueType>("issue");
 
 const asIssue = (issue: any) => ({ issueType: "issue" as IssueType, ...issue });
-const asEpic = (issue: any) => ({ issueType: "epic" as IssueType, ...issue });
+const asEpic = (issue: any) => ({
+  issueType: "epic" as IssueType,
+  ...issue,
+  issues: issue.issues || [],
+});
 
 onMounted(async () => {
   issues.value = await Promise.all([fetchIssues(), fetchEpics()])
