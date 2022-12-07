@@ -14,18 +14,25 @@
 </template>
 
 <script lang="ts" setup>
+import axios from "axios";
 import { ref } from "vue";
+import type { Issue } from "./issue.model";
 import type { Sprint } from "./sprint.model";
 
-defineProps<{
+let props = defineProps<{
   sprint: Sprint;
+  issues: Issue[];
 }>();
 
-let emit = defineEmits(["remove"]);
+let emit = defineEmits(["remove", "update:issues"]);
 
 let sprintTitle = ref("");
 
-function createSprint() {}
+async function createSprint() {
+  let issue = { title: sprintTitle.value, sprint: { id: props.sprint.id } };
+  let { data } = await axios.post("http://localhost:3000/issues", issue);
+  emit("update:issues", [...props.issues, data]);
+}
 
 function removeSprint(id: number) {
   emit("remove", id);
