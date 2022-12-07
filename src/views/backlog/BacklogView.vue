@@ -51,7 +51,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import axios from "axios";
-import { Delete, Plus } from "@element-plus/icons-vue";
 import { sortBy } from "lodash";
 import EpicItem from "./EpicItem.vue";
 import IssueItem from "./IssueItem.vue";
