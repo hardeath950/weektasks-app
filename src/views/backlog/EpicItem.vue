@@ -39,9 +39,9 @@ const issueTitle = ref("");
 
 async function createIssue() {
   const issue = { title: issueTitle.value, epic: props.issue };
-  let { data } = await axios.post<any[]>("http://localhost:3000/issues", issue);
-  issueTitle.value = "";
+  let { data } = await axios.post("http://localhost:3000/issues", issue);
   emit("update:issues", [...props.issues, data]);
+  issueTitle.value = "";
 }
 
 function removeEpic(id: number) {
