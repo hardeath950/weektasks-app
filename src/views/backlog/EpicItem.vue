@@ -8,13 +8,15 @@
 </template>
 
 <script lang="ts" setup>
+import type { Issue } from "./issue.model";
+
 defineProps<{
-  issue: { id: number; title: string };
+  issue: Issue;
 }>();
 
 let emit = defineEmits(["remove"]);
 
 function removeEpic(id: number) {
-  emit("remove", { issueType: "epic", id });
+  emit("remove", "epic", id);
 }
 </script>
