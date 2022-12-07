@@ -6,6 +6,7 @@
           <EpicItem
             v-if="issue.issueType === 'epic'"
             :issue="issue"
+            v-model:issues="issue.issues"
             @remove="removeIssue"
           />
           <IssueItem v-else :issue="issue" @remove="removeIssue" />
