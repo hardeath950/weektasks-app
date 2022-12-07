@@ -5,8 +5,8 @@
       <el-icon><Delete /></el-icon>
     </button>
   </div>
-  <form @submit.prevent="createSprint">
-    <input v-model="sprintTitle" />
+  <form @submit.prevent="createIssue">
+    <input v-model="issueTitle" />
     <button type="submit">
       <el-icon><Plus /></el-icon>
     </button>
@@ -26,10 +26,10 @@ let props = defineProps<{
 
 let emit = defineEmits(["remove", "update:issues"]);
 
-let sprintTitle = ref("");
+let issueTitle = ref("");
 
-async function createSprint() {
-  let issue = { title: sprintTitle.value, sprint: { id: props.sprint.id } };
+async function createIssue() {
+  let issue = { title: issueTitle.value, sprint: { id: props.sprint.id } };
   let { data } = await axios.post("http://localhost:3000/issues", issue);
   emit("update:issues", [...props.issues, data]);
 }
