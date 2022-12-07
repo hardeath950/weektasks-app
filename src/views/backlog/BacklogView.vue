@@ -16,7 +16,7 @@
             :key="issueType"
             :value="issueType"
           >
-            {{ issueType === "issue" ? "Questõe" : "Épica" }}
+            {{ issueType === "issue" ? "Questão" : "Épica" }}
           </option>
         </select>
         <input v-model="issueTitle" data-testid="issue-title-input" />
