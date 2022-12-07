@@ -32,7 +32,7 @@ let props = defineProps<{
   epic: Epic;
 }>();
 
-let emit = defineEmits(["remove", "update:issue"]);
+let emit = defineEmits(["remove", "update:epic"]);
 
 const issueTitle = ref("");
 
@@ -43,7 +43,7 @@ async function createIssue() {
     ...props.epic,
     issues: [...props.epic.issues, data],
   };
-  emit("update:issue", epic);
+  emit("update:epic", epic);
   issueTitle.value = "";
 }
 
@@ -55,6 +55,6 @@ async function removeIssue(id: number) {
   await axios.delete("http://localhost:3000/issues/" + id);
   let issues = props.epic.issues.filter((i) => i.id !== id);
   let epic = { ...props.epic, issues };
-  emit("update:issue", epic);
+  emit("update:epic", epic);
 }
 </script>
