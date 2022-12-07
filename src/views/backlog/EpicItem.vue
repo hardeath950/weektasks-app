@@ -6,6 +6,14 @@
         <el-icon><Delete /></el-icon>
       </button>
     </div>
+    <ul>
+      <li v-for="issue in issues" :key="issue.id">
+        {{ issue.title }}
+        <button @click="removeIssue(issue.id)">
+          <el-icon><Delete /></el-icon>
+        </button>
+      </li>
+    </ul>
     <form @submit.prevent="createIssue">
       <input v-model="issueTitle" />
       <button>
@@ -22,19 +30,27 @@ import type { Issue } from "./issue.model";
 
 let props = defineProps<{
   issue: Issue;
+  issues: Issue[];
 }>();
 
-let emit = defineEmits(["remove"]);
+let emit = defineEmits(["remove", "update:issues"]);
 
 const issueTitle = ref("");
 
 async function createIssue() {
   const issue = { title: issueTitle.value, epic: props.issue };
-  await axios.post<any[]>("http://localhost:3000/issues", issue);
+  let { data } = await axios.post<any[]>("http://localhost:3000/issues", issue);
   issueTitle.value = "";
+  emit("update:issues", [...props.issues, data]);
 }
 
 function removeEpic(id: number) {
   emit("remove", "epic", id);
+}
+
+async function removeIssue(id: number) {
+  await axios.delete("http://localhost:3000/issues/" + id);
+  let issues = props.issues.filter((i) => i.id !== id);
+  emit("update:issues", issues);
 }
 </script>
