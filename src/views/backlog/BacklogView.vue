@@ -6,7 +6,7 @@
           <EpicItem
             v-if="issue.issueType === 'epic'"
             v-model:epic="issues[i]"
-            @remove="removeIssue"
+            @remove="removeEpic"
           />
           <IssueItem v-else :issue="issue" @remove="removeIssue" />
         </li>
@@ -102,14 +102,19 @@ async function createIssue() {
   issueTitle.value = "";
 }
 
-async function removeIssue(issueType: IssueType, id: number) {
-  if (issueType === "issue")
-    await axios.delete("http://localhost:3000/issues/" + id);
-  else if (issueType === "epic")
-    await axios.delete("http://localhost:3000/epics/" + id);
+async function removeIssue(id: number) {
+  await axios.delete("http://localhost:3000/issues/" + id);
 
   issues.value = issues.value.filter(
-    (i) => !(i.issueType === issueType && i.id === id)
+    (i) => !(i.issueType === "issue" && i.id === id)
+  );
+}
+
+async function removeEpic(id: number) {
+  await axios.delete("http://localhost:3000/epics/" + id);
+
+  issues.value = issues.value.filter(
+    (i) => !(i.issueType === "epic" && i.id === id)
   );
 }
 

@@ -48,7 +48,7 @@ async function createIssue() {
 }
 
 function removeEpic(id: number) {
-  emit("remove", "epic", id);
+  emit("remove", id);
 }
 
 async function removeIssue(id: number) {
