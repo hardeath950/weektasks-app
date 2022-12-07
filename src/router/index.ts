@@ -1,4 +1,4 @@
-import BacklogView from "@/views/BacklogView.vue";
+import BacklogView from "@/views/backlog/BacklogView.vue";
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 
