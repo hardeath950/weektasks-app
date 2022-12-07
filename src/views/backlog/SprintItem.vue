@@ -42,6 +42,7 @@ async function createIssue() {
   let issue = { title: issueTitle.value, sprint: { id: props.sprint.id } };
   let { data } = await axios.post("http://localhost:3000/issues", issue);
   emit("update:issues", [...props.issues, data]);
+  issueTitle.value = "";
 }
 
 function removeSprint(id: number) {
