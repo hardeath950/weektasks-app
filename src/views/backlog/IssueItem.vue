@@ -42,6 +42,7 @@ function removeIssue(id: number) {
 async function updateIssueTitle() {
   let patch = { title: issueTitle.value };
   await axios.patch("http://localhost:3000/issues/" + props.issue.id, patch);
+  editable.value = false;
 }
 </script>
 
