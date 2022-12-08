@@ -1,6 +1,6 @@
 <template>
   <div>
-    {{ sprint.title }}
+    <WkEditable v-model="sprintTitle" :editable="editable" />
     <button @click="removeSprint(sprint.id)">
       <el-icon><Delete /></el-icon>
     </button>
@@ -27,6 +27,7 @@
 import axios from "axios";
 import { ref, computed } from "vue";
 import type { Sprint } from "./sprint.model";
+import WkEditable from "@/components/form/WkEditable.vue";
 
 let props = defineProps<{
   sprint: Sprint;
@@ -34,12 +35,18 @@ let props = defineProps<{
 
 let emit = defineEmits(["remove", "update:sprint"]);
 
+let sprintTitle = computed({
+  get: () => props.sprint.title,
+  set: (title) => emit("update:sprint", { ...props.sprint, title }),
+});
+
 let sprintIssues = computed({
   get: () => props.sprint.issues,
   set: (issues) => emit("update:sprint", { ...props.sprint, issues }),
 });
 
 let issueTitle = ref("");
+let editable = ref(false);
 
 async function createIssue() {
   let issue = { title: issueTitle.value, sprint: { id: props.sprint.id } };
