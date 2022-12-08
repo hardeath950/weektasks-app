@@ -1,9 +1,14 @@
 <template>
-  <div>
+  <div class="sprint-topbar">
     <WkEditable v-model="sprintTitle" :editable="editable" />
-    <button @click="removeSprint(sprint.id)">
-      <el-icon><Delete /></el-icon>
-    </button>
+    <div class="actions">
+      <button @click="editable = !editable">
+        <el-icon><Edit /></el-icon>
+      </button>
+      <button @click="removeSprint(sprint.id)">
+        <el-icon><Delete /></el-icon>
+      </button>
+    </div>
   </div>
   <div>
     <ul>
@@ -64,3 +69,12 @@ async function removeIssue(id: number) {
   sprintIssues.value = props.sprint.issues.filter((i) => i.id !== id);
 }
 </script>
+
+<style scoped>
+.sprint-topbar {
+  display: flex;
+}
+.actions {
+  margin-left: auto;
+}
+</style>
