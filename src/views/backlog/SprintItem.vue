@@ -1,5 +1,8 @@
 <template>
   <div class="sprint-topbar">
+    <button class="toggle-issues" @click="hideIssues = !hideIssues">
+      <el-icon><ArrowDown /></el-icon>
+    </button>
     <WkEditable v-model="sprintTitle" :editable="editable" />
     <div class="actions">
       <button v-if="editable" @click="updateSprintTitle">
@@ -13,7 +16,7 @@
       </button>
     </div>
   </div>
-  <div>
+  <div class="issues" :class="{ hide: hideIssues }">
     <ul>
       <li v-for="(issue, i) in sprintIssues" :key="issue.id">
         <IssueItem
@@ -22,13 +25,13 @@
         />
       </li>
     </ul>
+    <form @submit.prevent="createIssue">
+      <input v-model="issueTitle" />
+      <button type="submit">
+        <el-icon><Plus /></el-icon>
+      </button>
+    </form>
   </div>
-  <form @submit.prevent="createIssue">
-    <input v-model="issueTitle" />
-    <button type="submit">
-      <el-icon><Plus /></el-icon>
-    </button>
-  </form>
 </template>
 
 <script lang="ts" setup>
@@ -37,6 +40,7 @@ import { ref, computed } from "vue";
 import type { Sprint } from "./sprint.model";
 import WkEditable from "@/components/form/WkEditable.vue";
 import IssueItem from "./IssueItem.vue";
+import { ArrowDown } from "@element-plus/icons-vue";
 
 let props = defineProps<{
   sprint: Sprint;
@@ -53,6 +57,8 @@ let sprintIssues = computed({
   get: () => props.sprint.issues,
   set: (issues) => emit("update:sprint", { ...props.sprint, issues }),
 });
+
+let hideIssues = ref(true);
 
 let editable = ref(false);
 
@@ -87,5 +93,8 @@ async function removeIssue(id: number) {
 }
 .actions {
   margin-left: auto;
+}
+.issues.hide {
+  display: none;
 }
 </style>
