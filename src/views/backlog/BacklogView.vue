@@ -8,7 +8,7 @@
             v-model:epic="issues[i]"
             @remove="removeEpic"
           />
-          <IssueItem v-else :issue="issue" @remove="removeIssue" />
+          <IssueItem v-else v-model:issue="issues[i]" @remove="removeIssue" />
         </li>
       </ul>
       <form @submit.prevent="createIssue">

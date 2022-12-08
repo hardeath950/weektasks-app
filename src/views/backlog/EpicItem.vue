@@ -1,17 +1,25 @@
 <template>
   <div class="epic">
-    <div>
-      {{ epic.title }}
-      <button @click="removeEpic(epic.id)">
-        <el-icon><Delete /></el-icon>
-      </button>
-    </div>
-    <ul>
-      <li v-for="issue in epic.issues" :key="issue.id">
-        {{ issue.title }}
-        <button @click="removeIssue(issue.id)">
+    <div class="epic-topbar">
+      <WkEditable v-model="epicTitle" :editable="editable" />
+      <div class="actions">
+        <button v-if="editable" @click="updateEpicTitle">
+          <el-icon><Check /></el-icon>
+        </button>
+        <button @click="editable = !editable">
+          <el-icon><Edit /></el-icon>
+        </button>
+        <button @click="removeEpic(epic.id)">
           <el-icon><Delete /></el-icon>
         </button>
+      </div>
+    </div>
+    <ul>
+      <li v-for="(issue, i) in epic.issues" :key="issue.id">
+        <IssueItem
+          v-model:issue="epicIssues[i]"
+          @remove="removeIssue(issue.id)"
+        />
       </li>
     </ul>
     <form @submit.prevent="createIssue">
@@ -24,9 +32,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import axios from "axios";
 import type { Epic } from "./issue.model";
+import WkEditable from "@/components/form/WkEditable.vue";
+import IssueItem from "./IssueItem.vue";
 
 let props = defineProps<{
   epic: Epic;
@@ -34,27 +44,52 @@ let props = defineProps<{
 
 let emit = defineEmits(["remove", "update:epic"]);
 
-const issueTitle = ref("");
+let epicTitle = computed({
+  get: () => props.epic.title,
+  set: (title: any) => emit("update:epic", patchEpic({ title })),
+});
 
-async function createIssue() {
-  const issue = { title: issueTitle.value, epic: props.epic };
-  let { data } = await axios.post("http://localhost:3000/issues", issue);
-  let epic = {
-    ...props.epic,
-    issues: [...props.epic.issues, data],
-  };
-  emit("update:epic", epic);
-  issueTitle.value = "";
+let epicIssues = computed({
+  get: () => props.epic.issues,
+  set: (issues: any) => emit("update:epic", patchEpic({ issues })),
+});
+
+const issueTitle = ref("");
+const editable = ref(false);
+
+function patchEpic(patch: Partial<Epic>) {
+  return { ...props.epic, ...patch };
+}
+
+async function updateEpicTitle() {
+  let patch = { title: epicTitle.value };
+  await axios.patch("http://localhost:3000/epics/" + props.epic.id, patch);
+  editable.value = false;
 }
 
 function removeEpic(id: number) {
   emit("remove", id);
 }
 
+async function createIssue() {
+  const issue = { title: issueTitle.value, epic: props.epic };
+  let { data } = await axios.post("http://localhost:3000/issues", issue);
+  epicIssues.value = [...props.epic.issues, data];
+  issueTitle.value = "";
+}
+
 async function removeIssue(id: number) {
   await axios.delete("http://localhost:3000/issues/" + id);
-  let issues = props.epic.issues.filter((i) => i.id !== id);
-  let epic = { ...props.epic, issues };
-  emit("update:epic", epic);
+  epicIssues.value = props.epic.issues.filter((i) => i.id !== id);
 }
 </script>
+
+<style scoped>
+.epic-topbar {
+  display: flex;
+}
+
+.actions {
+  margin-left: auto;
+}
+</style>
