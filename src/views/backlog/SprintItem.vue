@@ -56,7 +56,11 @@ let sprintIssues = computed({
 
 let editable = ref(false);
 
-async function updateSprintTitle() {}
+async function updateSprintTitle() {
+  let patch = { title: sprintTitle.value };
+  await axios.patch("http://localhost:3000/issues" + props.sprint.id, patch);
+  editable.value = false;
+}
 
 function removeSprint(id: number) {
   emit("remove", id);
