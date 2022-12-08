@@ -6,10 +6,10 @@
         <button @click="editable = !editable">
           <el-icon><Edit /></el-icon>
         </button>
-      <button @click="removeEpic(epic.id)">
-        <el-icon><Delete /></el-icon>
-      </button>
-    </div>
+        <button @click="removeEpic(epic.id)">
+          <el-icon><Delete /></el-icon>
+        </button>
+      </div>
     </div>
     <ul>
       <li v-for="(issue, i) in epic.issues" :key="issue.id">
@@ -61,8 +61,7 @@ function patchEpic(patch: Partial<Epic>) {
 async function createIssue() {
   const issue = { title: issueTitle.value, epic: props.epic };
   let { data } = await axios.post("http://localhost:3000/issues", issue);
-  let epic = patchEpic({ issues: [...props.epic.issues, data] });
-  emit("update:epic", epic);
+  epicIssues.value = [...props.epic.issues, data];
   issueTitle.value = "";
 }
 
@@ -72,9 +71,7 @@ function removeEpic(id: number) {
 
 async function removeIssue(id: number) {
   await axios.delete("http://localhost:3000/issues/" + id);
-  let issues = props.epic.issues.filter((i) => i.id !== id);
-  let epic = patchEpic({ issues });
-  emit("update:epic", epic);
+  epicIssues.value = props.epic.issues.filter((i) => i.id !== id);
 }
 </script>
 
