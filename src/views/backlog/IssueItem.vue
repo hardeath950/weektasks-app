@@ -17,13 +17,14 @@
 </template>
 
 <script lang="ts" setup>
-import WkEditable from "@/components/form/WkEditable.vue";
-import { Check, Edit } from "@element-plus/icons-vue";
 import axios from "axios";
 import { ref, computed } from "vue";
+import { Check, Edit } from "@element-plus/icons-vue";
+import type { Issue } from "./issue.model";
+import WkEditable from "@/components/form/WkEditable.vue";
 
 let props = defineProps<{
-  issue: { id: number; title: string };
+  issue: Issue;
 }>();
 
 let emit = defineEmits(["remove", "update:issue"]);

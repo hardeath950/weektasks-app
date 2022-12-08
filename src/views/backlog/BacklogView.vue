@@ -30,10 +30,9 @@
 
     <div class="sprints">
       <ul>
-        <li v-for="sprint in sprints" :key="sprint.id">
+        <li v-for="(sprint, i) in sprints" :key="sprint.id">
           <SprintItem
-            :sprint="sprint"
-            v-model:issues="sprint.issues"
+            v-model:sprint="sprints[i]"
             @remove="removeSprint(sprint.id)"
           />
         </li>
