@@ -3,6 +3,9 @@
     <div class="epic-topbar">
       <WkEditable v-model="epicTitle" :editable="editable" />
       <div class="actions">
+        <button v-if="editable" @click="updateEpicTitle">
+          <el-icon><Check /></el-icon>
+        </button>
         <button @click="editable = !editable">
           <el-icon><Edit /></el-icon>
         </button>
@@ -58,15 +61,21 @@ function patchEpic(patch: Partial<Epic>) {
   return { ...props.epic, ...patch };
 }
 
+async function updateEpicTitle() {
+  let patch = { title: epicTitle.value };
+  await axios.patch("http://localhost:3000/epics/" + props.epic.id, patch);
+  editable.value = false;
+}
+
+function removeEpic(id: number) {
+  emit("remove", id);
+}
+
 async function createIssue() {
   const issue = { title: issueTitle.value, epic: props.epic };
   let { data } = await axios.post("http://localhost:3000/issues", issue);
   epicIssues.value = [...props.epic.issues, data];
   issueTitle.value = "";
-}
-
-function removeEpic(id: number) {
-  emit("remove", id);
 }
 
 async function removeIssue(id: number) {
