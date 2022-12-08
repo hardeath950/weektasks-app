@@ -24,7 +24,7 @@
 </template>
 
 <script lang="ts" setup>
-import { ref } from "vue";
+import { ref, computed } from "vue";
 import axios from "axios";
 import type { Epic } from "./issue.model";
 
@@ -34,7 +34,16 @@ let props = defineProps<{
 
 let emit = defineEmits(["remove", "update:epic"]);
 
+let epicTitle = computed({
+  get: () => props.epic.title,
+  set: (title: any) => emit("update:epic", patchEpic({ title })),
+});
+
 const issueTitle = ref("");
+
+function patchEpic(patch: Partial<Epic>) {
+  return { ...props.epic, ...patch };
+}
 
 async function createIssue() {
   const issue = { title: issueTitle.value, epic: props.epic };
