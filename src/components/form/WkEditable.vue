@@ -1,5 +1,5 @@
 <template>
-  <input v-if="editable" v-bind="$attrs" :value="modelValue" />
+  <input v-if="editable" v-bind="$attrs" v-model="modelValue" />
   <span v-else v-bind="$attrs">{{ modelValue }}</span>
 </template>
 
