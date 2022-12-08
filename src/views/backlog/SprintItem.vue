@@ -58,7 +58,7 @@ let editable = ref(false);
 
 async function updateSprintTitle() {
   let patch = { title: sprintTitle.value };
-  await axios.patch("http://localhost:3000/issues" + props.sprint.id, patch);
+  await axios.patch("http://localhost:3000/sprints/" + props.sprint.id, patch);
   editable.value = false;
 }
 
