@@ -12,11 +12,11 @@
     </div>
     </div>
     <ul>
-      <li v-for="issue in epic.issues" :key="issue.id">
-        {{ issue.title }}
-        <button @click="removeIssue(issue.id)">
-          <el-icon><Delete /></el-icon>
-        </button>
+      <li v-for="(issue, i) in epic.issues" :key="issue.id">
+        <IssueItem
+          v-model:issue="epicIssues[i]"
+          @remove="removeIssue(issue.id)"
+        />
       </li>
     </ul>
     <form @submit.prevent="createIssue">
@@ -33,6 +33,7 @@ import { ref, computed } from "vue";
 import axios from "axios";
 import type { Epic } from "./issue.model";
 import WkEditable from "@/components/form/WkEditable.vue";
+import IssueItem from "./IssueItem.vue";
 
 let props = defineProps<{
   epic: Epic;
@@ -43,6 +44,11 @@ let emit = defineEmits(["remove", "update:epic"]);
 let epicTitle = computed({
   get: () => props.epic.title,
   set: (title: any) => emit("update:epic", patchEpic({ title })),
+});
+
+let epicIssues = computed({
+  get: () => props.epic.issues,
+  set: (issues: any) => emit("update:epic", patchEpic({ issues })),
 });
 
 const issueTitle = ref("");
