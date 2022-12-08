@@ -48,10 +48,7 @@ function patchEpic(patch: Partial<Epic>) {
 async function createIssue() {
   const issue = { title: issueTitle.value, epic: props.epic };
   let { data } = await axios.post("http://localhost:3000/issues", issue);
-  let epic = {
-    ...props.epic,
-    issues: [...props.epic.issues, data],
-  };
+  let epic = patchEpic({ issues: [...props.epic.issues, data] });
   emit("update:epic", epic);
   issueTitle.value = "";
 }
@@ -63,7 +60,7 @@ function removeEpic(id: number) {
 async function removeIssue(id: number) {
   await axios.delete("http://localhost:3000/issues/" + id);
   let issues = props.epic.issues.filter((i) => i.id !== id);
-  let epic = { ...props.epic, issues };
+  let epic = patchEpic({ issues });
   emit("update:epic", epic);
 }
 </script>
