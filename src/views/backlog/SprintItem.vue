@@ -2,7 +2,7 @@
   <div class="sprint-topbar">
     <WkEditable v-model="sprintTitle" :editable="editable" />
     <div class="actions">
-      <button @click="updateSprintTitle">
+      <button v-if="editable" @click="updateSprintTitle">
         <el-icon><Check /></el-icon>
       </button>
       <button @click="editable = !editable">
