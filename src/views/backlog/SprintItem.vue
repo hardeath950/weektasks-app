@@ -15,11 +15,11 @@
   </div>
   <div>
     <ul>
-      <li v-for="issue in sprintIssues" :key="issue.id">
-        {{ issue.title }}
-        <button @click="removeIssue(issue.id)">
-          <el-icon><Delete /></el-icon>
-        </button>
+      <li v-for="(issue, i) in sprintIssues" :key="issue.id">
+        <IssueItem
+          v-model:issue="sprintIssues[i]"
+          @remove="removeIssue(issue.id)"
+        />
       </li>
     </ul>
   </div>
@@ -36,7 +36,7 @@ import axios from "axios";
 import { ref, computed } from "vue";
 import type { Sprint } from "./sprint.model";
 import WkEditable from "@/components/form/WkEditable.vue";
-import { f } from "vitest/dist/index-9f5bc072";
+import IssueItem from "./IssueItem.vue";
 
 let props = defineProps<{
   sprint: Sprint;
