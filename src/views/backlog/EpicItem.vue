@@ -14,14 +14,16 @@
         </button>
       </div>
     </div>
-    <ul>
-      <li v-for="(issue, i) in epic.issues" :key="issue.id">
-        <IssueItem
-          v-model:issue="epicIssues[i]"
-          @remove="removeIssue(issue.id)"
-        />
-      </li>
-    </ul>
+    <draggable v-model="epicIssues" item-key="id" tag="ul" group="issues">
+      <template #item="{ element: issue, index: i }">
+        <li>
+          <IssueItem
+            v-model:issue="epicIssues[i]"
+            @remove="removeIssue(issue.id)"
+          />
+        </li>
+      </template>
+    </draggable>
     <form @submit.prevent="createIssue">
       <input v-model="issueTitle" />
       <button>
@@ -37,6 +39,7 @@ import axios from "axios";
 import type { Epic } from "./issue.model";
 import WkEditable from "@/components/form/WkEditable.vue";
 import IssueItem from "./IssueItem.vue";
+import draggable from "vuedraggable";
 
 let props = defineProps<{
   epic: Epic;
