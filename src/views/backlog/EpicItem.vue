@@ -1,6 +1,6 @@
 <template>
   <div class="epic">
-    <div class="epic-topbar">
+    <div class="epic-topbar" :class="props.topbarClass">
       <WkEditable v-model="epicTitle" :editable="editable" />
       <div class="actions">
         <button v-if="editable" @click="updateEpicTitle">
@@ -40,6 +40,7 @@ import IssueItem from "./IssueItem.vue";
 
 let props = defineProps<{
   epic: Epic;
+  topbarClass?: any;
 }>();
 
 let emit = defineEmits(["remove", "update:epic"]);

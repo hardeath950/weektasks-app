@@ -1,16 +1,30 @@
 <template>
   <main class="backlog">
     <div class="issues">
-      <ul>
-        <li v-for="(issue, i) in issues" :key="issue.id">
+      <draggable
+        v-model="issues"
+        item-key="id"
+        tag="ul"
+        handle=".draggable-handle"
+        group="issues"
+      >
+        <template #item="{ element: issue, index: i }">
+          <li>
           <EpicItem
             v-if="issue.issueType === 'epic'"
             v-model:epic="issues[i]"
+              topbarClass="draggable-handle"
             @remove="removeEpic"
           />
-          <IssueItem v-else v-model:issue="issues[i]" @remove="removeIssue" />
+            <IssueItem
+              v-else
+              v-model:issue="issues[i]"
+              class="draggable-handle"
+              @remove="removeIssue"
+            />
         </li>
-      </ul>
+        </template>
+      </draggable>
       <form @submit.prevent="createIssue">
         <select v-model="issueTypeTarget">
           <option
@@ -54,6 +68,7 @@ import { sortBy } from "lodash";
 import EpicItem from "./EpicItem.vue";
 import IssueItem from "./IssueItem.vue";
 import SprintItem from "./SprintItem.vue";
+import draggable from "vuedraggable";
 
 const issues = ref<any[]>([]);
 const issueTitle = ref("");
