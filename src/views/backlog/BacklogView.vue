@@ -11,19 +11,19 @@
       >
         <template #item="{ element: issue, index: i }">
           <li>
-          <EpicItem
-            v-if="issue.issueType === 'epic'"
-            v-model:epic="issues[i]"
+            <EpicItem
+              v-if="issue.issueType === 'epic'"
+              v-model:epic="issues[i]"
               topbarClass="draggable-handle"
-            @remove="removeEpic"
-          />
+              @remove="removeEpic"
+            />
             <IssueItem
               v-else
               v-model:issue="issues[i]"
               class="draggable-handle"
               @remove="removeIssue"
             />
-        </li>
+          </li>
         </template>
       </draggable>
       <form @submit.prevent="createIssue">
@@ -44,14 +44,16 @@
     </div>
 
     <div class="sprints">
-      <ul>
-        <li v-for="(sprint, i) in sprints" :key="sprint.id">
-          <SprintItem
-            v-model:sprint="sprints[i]"
-            @remove="removeSprint(sprint.id)"
-          />
-        </li>
-      </ul>
+      <draggable v-model="sprints" item-key="id" tag="ul" group="sprints">
+        <template #item="{ element: sprint, index: i }">
+          <li>
+            <SprintItem
+              v-model:sprint="sprints[i]"
+              @remove="removeSprint(sprint.id)"
+            />
+          </li>
+        </template>
+      </draggable>
       <form @submit.prevent="createSprint">
         <input v-model="sprintTitle" />
         <button>
