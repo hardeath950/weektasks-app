@@ -5,6 +5,7 @@
         v-model="issues"
         item-key="id"
         tag="ul"
+        handle=".draggable-handle"
         group="issues"
       >
         <template #item="{ element: issue, index: i }">
@@ -12,9 +13,15 @@
           <EpicItem
             v-if="issue.issueType === 'epic'"
             v-model:epic="issues[i]"
+              topbarClass="draggable-handle"
             @remove="removeEpic"
           />
-          <IssueItem v-else v-model:issue="issues[i]" @remove="removeIssue" />
+            <IssueItem
+              v-else
+              v-model:issue="issues[i]"
+              class="draggable-handle"
+              @remove="removeIssue"
+            />
         </li>
         </template>
       </draggable>
