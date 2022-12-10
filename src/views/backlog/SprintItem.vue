@@ -17,14 +17,22 @@
     </div>
   </div>
   <div class="issues" :class="{ hide: hideIssues }">
-    <ul>
-      <li v-for="(issue, i) in sprintIssues" :key="issue.id">
-        <IssueItem
-          v-model:issue="sprintIssues[i]"
-          @remove="removeIssue(issue.id)"
-        />
-      </li>
-    </ul>
+    <draggable
+      v-model="sprintIssues"
+      item-key="id"
+      tag="ul"
+      data-dropzone="sprint"
+      group="issues"
+    >
+      <template #item="{ element: issue, index: i }">
+        <li>
+          <IssueItem
+            v-model:issue="sprintIssues[i]"
+            @remove="removeIssue(issue.id)"
+          />
+        </li>
+      </template>
+    </draggable>
     <form @submit.prevent="createIssue">
       <input v-model="issueTitle" />
       <button type="submit">
@@ -41,6 +49,7 @@ import type { Sprint } from "./sprint.model";
 import WkEditable from "@/components/form/WkEditable.vue";
 import IssueItem from "./IssueItem.vue";
 import { ArrowDown } from "@element-plus/icons-vue";
+import draggable from "vuedraggable";
 
 let props = defineProps<{
   sprint: Sprint;

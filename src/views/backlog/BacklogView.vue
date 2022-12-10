@@ -7,6 +7,7 @@
         tag="ul"
         handle=".draggable-handle"
         group="issues"
+        :move="canMoveBacklogItemToSprint"
       >
         <template #item="{ element: issue, index: i }">
           <li>
@@ -154,6 +155,15 @@ async function createSprint() {
 async function removeSprint(id: number) {
   await axios.delete("http://localhost:3000/sprints/" + id);
   sprints.value = sprints.value.filter((s) => s.id !== id);
+}
+
+function canMoveBacklogItemToSprint({ draggedContext, relatedContext }: any) {
+  let draggedItem = draggedContext.element;
+  let dropzone = relatedContext.component.$attrs["data-dropzone"];
+  return (
+    dropzone !== "sprint" ||
+    (dropzone === "sprint" && draggedItem.issueType === "issue")
+  );
 }
 </script>
 
