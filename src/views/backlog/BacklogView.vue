@@ -109,12 +109,12 @@ async function createIssue() {
 
   if (issueTypeTarget.value === "issue")
     response = await axios
-      .post<any[]>("http://localhost:3000/issues", issue)
+      .post<any[]>("http://localhost:3000/backlog/issues", issue)
       .then((res) => asIssue(res.data));
 
   if (issueTypeTarget.value === "epic") {
     response = await axios
-      .post<any[]>("http://localhost:3000/epics", issue)
+      .post<any[]>("http://localhost:3000/backlog/epics", issue)
       .then((res) => asEpic(res.data));
   }
 
