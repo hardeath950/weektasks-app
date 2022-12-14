@@ -67,7 +67,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import axios from "axios";
-import { sortBy } from "lodash";
 import EpicItem from "./EpicItem.vue";
 import IssueItem from "./IssueItem.vue";
 import SprintItem from "./SprintItem.vue";
@@ -88,19 +87,12 @@ const asEpic = (issue: any) => ({
 });
 
 onMounted(async () => {
-  issues.value = await Promise.all([fetchIssues(), fetchEpics()])
-    .then(([epics, issues]) => [...epics, ...issues])
-    .then((issues) => sortBy(issues, "createdAt"));
+  issues.value = await fetchBacklog();
 });
 
-async function fetchIssues() {
-  let { data } = await axios.get<any[]>("http://localhost:3000/issues");
-  return data.map((issue) => asIssue(issue));
-}
-
-async function fetchEpics() {
-  let { data } = await axios.get<any[]>("http://localhost:3000/epics");
-  return data.map((epic) => asEpic(epic));
+async function fetchBacklog() {
+  let { data } = await axios.get<any[]>("http://localhost:3000/backlog/issues-and-epics");
+  return data.map((issue) => issue.issueType === 'epic' ? asEpic(issue) : asIssue(issue));
 }
 
 async function createIssue() {
