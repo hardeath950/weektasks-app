@@ -45,7 +45,7 @@
     </div>
 
     <div class="sprints">
-      <draggable v-model="sprints" item-key="id" tag="ul" group="sprints">
+      <draggable v-model="sprints" item-key="id" tag="ul" group="sprints" @change="moveSprint">
         <template #item="{ element: sprint, index: i }">
           <li>
             <SprintItem
@@ -165,6 +165,14 @@ function moveBacklogItem({moved, added, removed}: any) {
   if (moved) {
     let { issueType, id } = moved.element;
     let url = `http://localhost:3000/backlog/order/${issueType}/${id}`
+    axios.post(url, { order: moved.newIndex });
+  }
+}
+
+function moveSprint({ moved }: any) {
+  if (moved) {
+    let { id } = moved.element;
+    let url = `http://localhost:3000/sprints/${id}/order`;
     axios.post(url, { order: moved.newIndex });
   }
 }
