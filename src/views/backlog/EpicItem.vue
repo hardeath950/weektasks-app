@@ -76,8 +76,9 @@ function removeEpic(id: number) {
 }
 
 async function createIssue() {
-  const issue = { title: issueTitle.value, epic: props.epic };
-  let { data } = await axios.post("http://localhost:3000/issues", issue);
+  const issue = { title: issueTitle.value };
+  let url = `http://localhost:3000/epics/${props.epic.id}/issues`;
+  let { data } = await axios.post(url, issue);
   epicIssues.value = [...props.epic.issues, data];
   issueTitle.value = "";
 }
