@@ -91,7 +91,7 @@ onMounted(async () => {
 });
 
 async function fetchBacklog() {
-  let { data } = await axios.get<any[]>("http://localhost:3000/backlog/issues-and-epics");
+  let { data } = await axios.get<any[]>("http://localhost:3000/backlog/items");
   return data.map((issue) => issue.issueType === 'epic' ? asEpic(issue) : asIssue(issue));
 }
 
