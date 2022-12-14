@@ -14,7 +14,7 @@
         </button>
       </div>
     </div>
-    <draggable v-model="epicIssues" item-key="id" tag="ul" group="issues">
+    <draggable v-model="epicIssues" item-key="id" tag="ul" group="issues" @change="moveIssue">
       <template #item="{ element: issue, index: i }">
         <li>
           <IssueItem
@@ -86,6 +86,14 @@ async function createIssue() {
 async function removeIssue(id: number) {
   await axios.delete("http://localhost:3000/issues/" + id);
   epicIssues.value = props.epic.issues.filter((i) => i.id !== id);
+}
+
+async function moveIssue({ moved }: any) {
+  if (moved) {
+    let { id } = moved.element;
+    let url = `http://localhost:3000/backlog/epics/${props.epic.id}/issues/${id}/order`
+    axios.post(url, { order: moved.newIndex });
+  }
 }
 </script>
 
