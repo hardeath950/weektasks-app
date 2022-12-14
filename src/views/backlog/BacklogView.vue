@@ -8,6 +8,7 @@
         handle=".draggable-handle"
         group="issues"
         :move="canMoveBacklogItemToSprint"
+        @change="moveBacklogItem"
       >
         <template #item="{ element: issue, index: i }">
           <li>
@@ -158,6 +159,9 @@ function canMoveBacklogItemToSprint({ draggedContext, relatedContext }: any) {
     dropzone !== "sprint" ||
     (dropzone === "sprint" && draggedItem.issueType === "issue")
   );
+}
+
+function moveBacklogItem({moved}: any) {
 }
 </script>
 
