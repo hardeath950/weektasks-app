@@ -84,8 +84,9 @@ function removeSprint(id: number) {
 let issueTitle = ref("");
 
 async function createIssue() {
-  let issue = { title: issueTitle.value, sprint: { id: props.sprint.id } };
-  let { data } = await axios.post("http://localhost:3000/issues", issue);
+  let issue = { title: issueTitle.value };
+  let url = `http://localhost:3000/sprints/${props.sprint.id}/issues`;
+  let { data } = await axios.post(url, issue);
   sprintIssues.value = [...props.sprint.issues, data];
   issueTitle.value = "";
 }
