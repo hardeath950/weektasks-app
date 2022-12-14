@@ -23,6 +23,7 @@
       tag="ul"
       data-dropzone="sprint"
       group="issues"
+      @change="moveIssue"
     >
       <template #item="{ element: issue, index: i }">
         <li>
@@ -94,6 +95,14 @@ async function createIssue() {
 async function removeIssue(id: number) {
   await axios.delete("http://localhost:3000/issues/" + id);
   sprintIssues.value = props.sprint.issues.filter((i) => i.id !== id);
+}
+
+async function moveIssue({ moved }: any) {
+  if (moved) {
+    let { id } = moved.element;
+    let url = `http://localhost:3000/sprints/${props.sprint.id}/issues/${id}/order`;
+    axios.post(url, { order: moved.newIndex });
+  }
 }
 </script>
 
