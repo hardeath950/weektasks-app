@@ -163,6 +163,12 @@ function canMoveBacklogItemToSprint({ draggedContext, relatedContext }: any) {
 }
 
 function moveBacklogItem({moved, added, removed}: any) {
+  if (added) {
+    let { id } = added.element;
+    let url = `http://localhost:3000/backlog/issues/${id}`;
+    axios.post(url, { order: added.newIndex });
+  }
+
   if (moved) {
     let { issueType, id } = moved.element;
     let url = `http://localhost:3000/backlog/order/${issueType}/${id}`
