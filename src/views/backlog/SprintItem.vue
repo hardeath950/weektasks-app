@@ -97,7 +97,13 @@ async function removeIssue(id: number) {
   sprintIssues.value = props.sprint.issues.filter((i) => i.id !== id);
 }
 
-async function moveIssue({ moved }: any) {
+async function moveIssue({ moved, added }: any) {
+  if (added) {
+    let { id } = added.element;
+    let url = `http://localhost:3000/sprints/${props.sprint.id}/issues/${id}`;
+    axios.post(url, { order: added.newIndex });
+  }
+
   if (moved) {
     let { id } = moved.element;
     let url = `http://localhost:3000/sprints/${props.sprint.id}/issues/${id}/order`;
