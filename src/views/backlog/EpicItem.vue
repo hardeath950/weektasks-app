@@ -88,7 +88,13 @@ async function removeIssue(id: number) {
   epicIssues.value = props.epic.issues.filter((i) => i.id !== id);
 }
 
-async function moveIssue({ moved }: any) {
+async function moveIssue({ moved, added }: any) {
+  if (added) {
+    let { id } = added.element;
+    let url = `http://localhost:3000/backlog/epics/${props.epic.id}/issues/${id}`;
+    axios.post(url, { order: added.newIndex });
+  }
+
   if (moved) {
     let { id } = moved.element;
     let url = `http://localhost:3000/backlog/epics/${props.epic.id}/issues/${id}/order`
