@@ -97,11 +97,17 @@ async function removeIssue(id: number) {
   sprintIssues.value = props.sprint.issues.filter((i) => i.id !== id);
 }
 
-async function moveIssue({ moved, added }: any) {
+async function moveIssue({ moved, added, removed }: any) {
   if (added) {
     let { id } = added.element;
     let url = `http://localhost:3000/sprints/${props.sprint.id}/issues/${id}`;
     axios.post(url, { order: added.newIndex });
+  }
+
+  if (removed) {
+    let { id } = removed.element;
+    let url = `http://localhost:3000/sprints/${props.sprint.id}/issues/${id}`;
+    axios.delete(url);
   }
 
   if (moved) {
