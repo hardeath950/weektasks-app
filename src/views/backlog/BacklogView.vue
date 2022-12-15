@@ -14,7 +14,8 @@
           <li>
             <EpicItem
               v-if="issue.issueType === 'epic'"
-              v-model:epic="issues[i]"
+              :epic="issues[i]"
+              @update:issues="issue.issues = $event"
               topbarClass="draggable-handle"
               @remove="removeEpic"
             />

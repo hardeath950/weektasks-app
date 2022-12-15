@@ -46,7 +46,7 @@ let props = defineProps<{
   topbarClass?: any;
 }>();
 
-let emit = defineEmits(["remove", "update:epic"]);
+let emit = defineEmits(["remove", "update:epic", "update:issues"]);
 
 let epicTitle = computed({
   get: () => props.epic.title,
@@ -55,7 +55,7 @@ let epicTitle = computed({
 
 let epicIssues = computed({
   get: () => props.epic.issues,
-  set: (issues: any) => emit("update:epic", patchEpic({ issues })),
+  set: (issues: any) => emit("update:issues", issues),
 });
 
 const issueTitle = ref("");
