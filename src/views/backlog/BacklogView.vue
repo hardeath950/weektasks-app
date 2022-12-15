@@ -169,6 +169,12 @@ function moveBacklogItem({moved, added, removed}: any) {
     axios.post(url, { order: added.newIndex });
   }
 
+  if (removed) {
+    let { id } = removed.element;
+    let url = `http://localhost:3000/backlog/issues/${id}/soft-remove`;
+    axios.delete(url);
+  }
+
   if (moved) {
     let { issueType, id } = moved.element;
     let url = `http://localhost:3000/backlog/order/${issueType}/${id}`
