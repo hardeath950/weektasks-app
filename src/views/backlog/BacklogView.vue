@@ -117,7 +117,7 @@ async function createIssue() {
 }
 
 async function removeIssue(id: number) {
-  await axios.delete("http://localhost:3000/issues/" + id);
+  await axios.delete("http://localhost:3000/backlog/issues/" + id);
 
   issues.value = issues.value.filter(
     (i) => !(i.issueType === "issue" && i.id === id)
@@ -125,7 +125,7 @@ async function removeIssue(id: number) {
 }
 
 async function removeEpic(id: number) {
-  await axios.delete("http://localhost:3000/epics/" + id);
+  await axios.delete("http://localhost:3000/backlog/epics/" + id);
 
   issues.value = issues.value.filter(
     (i) => !(i.issueType === "epic" && i.id === id)
