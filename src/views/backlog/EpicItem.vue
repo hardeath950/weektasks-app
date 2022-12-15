@@ -88,11 +88,17 @@ async function removeIssue(id: number) {
   epicIssues.value = props.epic.issues.filter((i) => i.id !== id);
 }
 
-async function moveIssue({ moved, added }: any) {
+async function moveIssue({ moved, added, removed }: any) {
   if (added) {
     let { id } = added.element;
     let url = `http://localhost:3000/backlog/epics/${props.epic.id}/issues/${id}`;
     axios.post(url, { order: added.newIndex });
+  }
+
+  if (removed) {
+    let { id } = removed.element;
+    let url = `http://localhost:3000/backlog/epics/${props.epic.id}/issues/${id}/soft-remove`;
+    axios.delete(url);
   }
 
   if (moved) {
