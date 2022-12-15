@@ -8,12 +8,14 @@
         handle=".draggable-handle"
         group="issues"
         :move="canMoveBacklogItemToSprint"
+        @change="moveBacklogItem"
       >
         <template #item="{ element: issue, index: i }">
           <li>
             <EpicItem
               v-if="issue.issueType === 'epic'"
-              v-model:epic="issues[i]"
+              :epic="issues[i]"
+              @update:issues="issue.issues = $event"
               topbarClass="draggable-handle"
               @remove="removeEpic"
             />
@@ -44,7 +46,7 @@
     </div>
 
     <div class="sprints">
-      <draggable v-model="sprints" item-key="id" tag="ul" group="sprints">
+      <draggable v-model="sprints" item-key="id" tag="ul" group="sprints" @change="moveSprint">
         <template #item="{ element: sprint, index: i }">
           <li>
             <SprintItem
@@ -67,7 +69,6 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 import axios from "axios";
-import { sortBy } from "lodash";
 import EpicItem from "./EpicItem.vue";
 import IssueItem from "./IssueItem.vue";
 import SprintItem from "./SprintItem.vue";
@@ -88,19 +89,12 @@ const asEpic = (issue: any) => ({
 });
 
 onMounted(async () => {
-  issues.value = await Promise.all([fetchIssues(), fetchEpics()])
-    .then(([epics, issues]) => [...epics, ...issues])
-    .then((issues) => sortBy(issues, "createdAt"));
+  issues.value = await fetchBacklog();
 });
 
-async function fetchIssues() {
-  let { data } = await axios.get<any[]>("http://localhost:3000/issues");
-  return data.map((issue) => asIssue(issue));
-}
-
-async function fetchEpics() {
-  let { data } = await axios.get<any[]>("http://localhost:3000/epics");
-  return data.map((epic) => asEpic(epic));
+async function fetchBacklog() {
+  let { data } = await axios.get<any[]>("http://localhost:3000/backlog/items");
+  return data.map((issue) => issue.issueType === 'epic' ? asEpic(issue) : asIssue(issue));
 }
 
 async function createIssue() {
@@ -109,12 +103,12 @@ async function createIssue() {
 
   if (issueTypeTarget.value === "issue")
     response = await axios
-      .post<any[]>("http://localhost:3000/issues", issue)
+      .post<any[]>("http://localhost:3000/backlog/issues", issue)
       .then((res) => asIssue(res.data));
 
   if (issueTypeTarget.value === "epic") {
     response = await axios
-      .post<any[]>("http://localhost:3000/epics", issue)
+      .post<any[]>("http://localhost:3000/backlog/epics", issue)
       .then((res) => asEpic(res.data));
   }
 
@@ -123,7 +117,7 @@ async function createIssue() {
 }
 
 async function removeIssue(id: number) {
-  await axios.delete("http://localhost:3000/issues/" + id);
+  await axios.delete("http://localhost:3000/backlog/issues/" + id);
 
   issues.value = issues.value.filter(
     (i) => !(i.issueType === "issue" && i.id === id)
@@ -131,7 +125,7 @@ async function removeIssue(id: number) {
 }
 
 async function removeEpic(id: number) {
-  await axios.delete("http://localhost:3000/epics/" + id);
+  await axios.delete("http://localhost:3000/backlog/epics/" + id);
 
   issues.value = issues.value.filter(
     (i) => !(i.issueType === "epic" && i.id === id)
@@ -166,6 +160,34 @@ function canMoveBacklogItemToSprint({ draggedContext, relatedContext }: any) {
     dropzone !== "sprint" ||
     (dropzone === "sprint" && draggedItem.issueType === "issue")
   );
+}
+
+function moveBacklogItem({moved, added, removed}: any) {
+  if (added) {
+    let { id } = added.element;
+    let url = `http://localhost:3000/backlog/issues/${id}`;
+    axios.post(url, { order: added.newIndex });
+  }
+
+  if (removed) {
+    let { id } = removed.element;
+    let url = `http://localhost:3000/backlog/issues/${id}/soft-remove`;
+    axios.delete(url);
+  }
+
+  if (moved) {
+    let { issueType, id } = moved.element;
+    let url = `http://localhost:3000/backlog/order/${issueType}/${id}`
+    axios.post(url, { order: moved.newIndex });
+  }
+}
+
+function moveSprint({ moved }: any) {
+  if (moved) {
+    let { id } = moved.element;
+    let url = `http://localhost:3000/sprints/${id}/order`;
+    axios.post(url, { order: moved.newIndex });
+  }
 }
 </script>
 

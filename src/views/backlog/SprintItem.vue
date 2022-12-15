@@ -23,6 +23,7 @@
       tag="ul"
       data-dropzone="sprint"
       group="issues"
+      @change="moveIssue"
     >
       <template #item="{ element: issue, index: i }">
         <li>
@@ -84,8 +85,9 @@ function removeSprint(id: number) {
 let issueTitle = ref("");
 
 async function createIssue() {
-  let issue = { title: issueTitle.value, sprint: { id: props.sprint.id } };
-  let { data } = await axios.post("http://localhost:3000/issues", issue);
+  let issue = { title: issueTitle.value };
+  let url = `http://localhost:3000/sprints/${props.sprint.id}/issues`;
+  let { data } = await axios.post(url, issue);
   sprintIssues.value = [...props.sprint.issues, data];
   issueTitle.value = "";
 }
@@ -93,6 +95,26 @@ async function createIssue() {
 async function removeIssue(id: number) {
   await axios.delete("http://localhost:3000/issues/" + id);
   sprintIssues.value = props.sprint.issues.filter((i) => i.id !== id);
+}
+
+async function moveIssue({ moved, added, removed }: any) {
+  if (added) {
+    let { id } = added.element;
+    let url = `http://localhost:3000/sprints/${props.sprint.id}/issues/${id}`;
+    axios.post(url, { order: added.newIndex });
+  }
+
+  if (removed) {
+    let { id } = removed.element;
+    let url = `http://localhost:3000/sprints/${props.sprint.id}/issues/${id}`;
+    axios.delete(url);
+  }
+
+  if (moved) {
+    let { id } = moved.element;
+    let url = `http://localhost:3000/sprints/${props.sprint.id}/issues/${id}/order`;
+    axios.post(url, { order: moved.newIndex });
+  }
 }
 </script>
 

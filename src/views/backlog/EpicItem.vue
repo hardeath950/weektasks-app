@@ -14,7 +14,7 @@
         </button>
       </div>
     </div>
-    <draggable v-model="epicIssues" item-key="id" tag="ul" group="issues">
+    <draggable v-model="epicIssues" item-key="id" tag="ul" group="issues" @change="moveIssue">
       <template #item="{ element: issue, index: i }">
         <li>
           <IssueItem
@@ -46,7 +46,7 @@ let props = defineProps<{
   topbarClass?: any;
 }>();
 
-let emit = defineEmits(["remove", "update:epic"]);
+let emit = defineEmits(["remove", "update:epic", "update:issues"]);
 
 let epicTitle = computed({
   get: () => props.epic.title,
@@ -55,7 +55,7 @@ let epicTitle = computed({
 
 let epicIssues = computed({
   get: () => props.epic.issues,
-  set: (issues: any) => emit("update:epic", patchEpic({ issues })),
+  set: (issues: any) => emit("update:issues", issues),
 });
 
 const issueTitle = ref("");
@@ -76,8 +76,9 @@ function removeEpic(id: number) {
 }
 
 async function createIssue() {
-  const issue = { title: issueTitle.value, epic: props.epic };
-  let { data } = await axios.post("http://localhost:3000/issues", issue);
+  const issue = { title: issueTitle.value };
+  let url = `http://localhost:3000/epics/${props.epic.id}/issues`;
+  let { data } = await axios.post(url, issue);
   epicIssues.value = [...props.epic.issues, data];
   issueTitle.value = "";
 }
@@ -85,6 +86,26 @@ async function createIssue() {
 async function removeIssue(id: number) {
   await axios.delete("http://localhost:3000/issues/" + id);
   epicIssues.value = props.epic.issues.filter((i) => i.id !== id);
+}
+
+async function moveIssue({ moved, added, removed }: any) {
+  if (added) {
+    let { id } = added.element;
+    let url = `http://localhost:3000/backlog/epics/${props.epic.id}/issues/${id}`;
+    axios.post(url, { order: added.newIndex });
+  }
+
+  if (removed) {
+    let { id } = removed.element;
+    let url = `http://localhost:3000/backlog/epics/${props.epic.id}/issues/${id}/soft-remove`;
+    axios.delete(url);
+  }
+
+  if (moved) {
+    let { id } = moved.element;
+    let url = `http://localhost:3000/backlog/epics/${props.epic.id}/issues/${id}/order`
+    axios.post(url, { order: moved.newIndex });
+  }
 }
 </script>
 
