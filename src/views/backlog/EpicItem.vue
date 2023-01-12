@@ -14,22 +14,24 @@
         </button>
       </div>
     </div>
-    <draggable v-model="epicIssues" item-key="id" tag="ul" group="issues" @change="moveIssue">
-      <template #item="{ element: issue, index: i }">
-        <li>
-          <IssueItem
-            v-model:issue="epicIssues[i]"
-            @remove="removeIssue(issue.id)"
-          />
-        </li>
-      </template>
-    </draggable>
-    <form @submit.prevent="createIssue">
-      <input v-model="issueTitle" />
-      <button>
-        <el-icon><Plus /></el-icon>
-      </button>
-    </form>
+    <div class="issues">
+      <draggable v-model="epicIssues" item-key="id" tag="ul" group="issues" @change="moveIssue">
+        <template #item="{ element: issue, index: i }">
+          <li>
+            <IssueItem
+              v-model:issue="epicIssues[i]"
+              @remove="removeIssue(issue.id)"
+            />
+          </li>
+        </template>
+      </draggable>
+      <form @submit.prevent="createIssue" class="create-issue">
+        <input v-model="issueTitle" />
+        <button>
+          <el-icon><Plus /></el-icon>
+        </button>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -109,9 +111,27 @@ async function moveIssue({ moved, added, removed }: any) {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .epic-topbar {
   display: flex;
+}
+
+.issues {
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.issue {
+  border-bottom: 1px solid #ccc;
+  padding: 5px;
+}
+
+.create-issue {
+  padding: 5px;
+  display: flex;
+  input {
+    width: 100%;
+  }
 }
 
 .actions {

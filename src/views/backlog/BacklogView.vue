@@ -56,7 +56,7 @@
           </li>
         </template>
       </draggable>
-      <form @submit.prevent="createSprint">
+      <form @submit.prevent="createSprint" class="create-sprint">
         <input v-model="sprintTitle" />
         <button>
           <el-icon><Plus /></el-icon>
@@ -191,7 +191,7 @@ function moveSprint({ moved }: any) {
 }
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
 .backlog {
   display: flex;
   gap: 20px;
@@ -204,10 +204,24 @@ function moveSprint({ moved }: any) {
   box-shadow: 0 0 5px #aaa;
 }
 
+.issue, .epic {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  min-width: 320px;
+  margin-bottom: 10px;
+}
+
 .sprints {
   padding: 10px;
   border: 1px solid #ccc;
   border-radius: 10px;
   box-shadow: 0 0 5px #aaa;
+}
+.create-sprint {
+  display: flex;
+  input {
+    width: 100%;
+  }
 }
 </style>

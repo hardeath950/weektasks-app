@@ -1,45 +1,47 @@
 <template>
-  <div class="sprint-topbar">
-    <button class="toggle-issues" @click="hideIssues = !hideIssues">
-      <el-icon><ArrowDown /></el-icon>
-    </button>
-    <WkEditable v-model="sprintTitle" :editable="editable" />
-    <div class="actions">
-      <button v-if="editable" @click="updateSprintTitle">
-        <el-icon><Check /></el-icon>
+  <div class="sprint">
+    <div class="sprint-topbar">
+      <button class="toggle-issues" @click="hideIssues = !hideIssues">
+        <el-icon><ArrowDown /></el-icon>
       </button>
-      <button @click="editable = !editable">
-        <el-icon><Edit /></el-icon>
-      </button>
-      <button @click="removeSprint(sprint.id)">
-        <el-icon><Delete /></el-icon>
-      </button>
+      <WkEditable v-model="sprintTitle" :editable="editable" />
+      <div class="actions">
+        <button v-if="editable" @click="updateSprintTitle">
+          <el-icon><Check /></el-icon>
+        </button>
+        <button @click="editable = !editable">
+          <el-icon><Edit /></el-icon>
+        </button>
+        <button @click="removeSprint(sprint.id)">
+          <el-icon><Delete /></el-icon>
+        </button>
+      </div>
     </div>
-  </div>
-  <div class="issues" :class="{ hide: hideIssues }">
-    <draggable
-      v-model="sprintIssues"
-      item-key="id"
-      tag="ul"
-      data-dropzone="sprint"
-      group="issues"
-      @change="moveIssue"
-    >
-      <template #item="{ element: issue, index: i }">
-        <li>
-          <IssueItem
-            v-model:issue="sprintIssues[i]"
-            @remove="removeIssue(issue.id)"
-          />
-        </li>
-      </template>
-    </draggable>
-    <form @submit.prevent="createIssue">
-      <input v-model="issueTitle" />
-      <button type="submit">
-        <el-icon><Plus /></el-icon>
-      </button>
-    </form>
+    <div class="issues" :class="{ hide: hideIssues }">
+      <draggable
+        v-model="sprintIssues"
+        item-key="id"
+        tag="ul"
+        data-dropzone="sprint"
+        group="issues"
+        @change="moveIssue"
+      >
+        <template #item="{ element: issue, index: i }">
+          <li>
+            <IssueItem
+              v-model:issue="sprintIssues[i]"
+              @remove="removeIssue(issue.id)"
+            />
+          </li>
+        </template>
+      </draggable>
+      <form @submit.prevent="createIssue" class="create-issue">
+        <input v-model="issueTitle" />
+        <button type="submit">
+          <el-icon><Plus /></el-icon>
+        </button>
+      </form>
+    </div>
   </div>
 </template>
 
@@ -118,14 +120,37 @@ async function moveIssue({ moved, added, removed }: any) {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+.sprint {
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  min-width: 320px;
+  margin-bottom: 10px;
+}
 .sprint-topbar {
   display: flex;
 }
 .actions {
   margin-left: auto;
 }
+.issues {
+  margin-top: 5px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+.issue {
+  border-bottom: 1px solid #ccc;
+  padding: 5px;
+}
 .issues.hide {
   display: none;
+}
+.create-issue {
+  padding: 5px;
+  display: flex;
+  input {
+    width: 100%;
+  }
 }
 </style>
