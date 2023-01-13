@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts" setup>
-import axios from "axios";
+import { axios } from "./axios";
 import { ref, computed } from "vue";
 import { Check, Edit } from "@element-plus/icons-vue";
 import type { Issue } from "./issue.model";
@@ -42,7 +42,7 @@ function removeIssue(id: number) {
 
 async function updateIssueTitle() {
   let patch = { title: issueTitle.value };
-  await axios.patch("http://localhost:3000/issues/" + props.issue.id, patch);
+  await axios.patch("/issues/" + props.issue.id, patch);
   editable.value = false;
 }
 </script>

@@ -68,11 +68,11 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import axios from "axios";
 import EpicItem from "./EpicItem.vue";
 import IssueItem from "./IssueItem.vue";
 import SprintItem from "./SprintItem.vue";
 import draggable from "vuedraggable";
+import { axios } from "./axios";
 
 const issues = ref<any[]>([]);
 const issueTitle = ref("");
@@ -93,7 +93,7 @@ onMounted(async () => {
 });
 
 async function fetchBacklog() {
-  let { data } = await axios.get<any[]>("http://localhost:3000/backlog/items");
+  let { data } = await axios.get<any[]>("/backlog/items");
   return data.map((issue) => issue.issueType === 'epic' ? asEpic(issue) : asIssue(issue));
 }
 
@@ -103,12 +103,12 @@ async function createIssue() {
 
   if (issueTypeTarget.value === "issue")
     response = await axios
-      .post<any[]>("http://localhost:3000/backlog/issues", issue)
+      .post<any[]>("/backlog/issues", issue)
       .then((res) => asIssue(res.data));
 
   if (issueTypeTarget.value === "epic") {
     response = await axios
-      .post<any[]>("http://localhost:3000/backlog/epics", issue)
+      .post<any[]>("/backlog/epics", issue)
       .then((res) => asEpic(res.data));
   }
 
@@ -117,7 +117,7 @@ async function createIssue() {
 }
 
 async function removeIssue(id: number) {
-  await axios.delete("http://localhost:3000/backlog/issues/" + id);
+  await axios.delete("/backlog/issues/" + id);
 
   issues.value = issues.value.filter(
     (i) => !(i.issueType === "issue" && i.id === id)
@@ -125,7 +125,7 @@ async function removeIssue(id: number) {
 }
 
 async function removeEpic(id: number) {
-  await axios.delete("http://localhost:3000/backlog/epics/" + id);
+  await axios.delete("/backlog/epics/" + id);
 
   issues.value = issues.value.filter(
     (i) => !(i.issueType === "epic" && i.id === id)
@@ -136,20 +136,20 @@ const sprintTitle = ref("");
 const sprints = ref<any[]>([]);
 
 onMounted(async () => {
-  let { data } = await axios.get<any[]>("http://localhost:3000/sprints");
+  let { data } = await axios.get<any[]>("/sprints");
   sprints.value = data;
 });
 
 async function createSprint() {
   const sprint = { title: sprintTitle.value };
-  let { data } = await axios.post("http://localhost:3000/sprints", sprint);
+  let { data } = await axios.post("/sprints", sprint);
   data.issues = [];
   sprints.value.push(data);
   sprintTitle.value = "";
 }
 
 async function removeSprint(id: number) {
-  await axios.delete("http://localhost:3000/sprints/" + id);
+  await axios.delete("/sprints/" + id);
   sprints.value = sprints.value.filter((s) => s.id !== id);
 }
 
@@ -165,19 +165,19 @@ function canMoveBacklogItemToSprint({ draggedContext, relatedContext }: any) {
 function moveBacklogItem({moved, added, removed}: any) {
   if (added) {
     let { id } = added.element;
-    let url = `http://localhost:3000/backlog/issues/${id}`;
+    let url = `/backlog/issues/${id}`;
     axios.post(url, { order: added.newIndex });
   }
 
   if (removed) {
     let { id } = removed.element;
-    let url = `http://localhost:3000/backlog/issues/${id}/soft-remove`;
+    let url = `/backlog/issues/${id}/soft-remove`;
     axios.delete(url);
   }
 
   if (moved) {
     let { issueType, id } = moved.element;
-    let url = `http://localhost:3000/backlog/order/${issueType}/${id}`
+    let url = `/backlog/order/${issueType}/${id}`
     axios.post(url, { order: moved.newIndex });
   }
 }
@@ -185,7 +185,7 @@ function moveBacklogItem({moved, added, removed}: any) {
 function moveSprint({ moved }: any) {
   if (moved) {
     let { id } = moved.element;
-    let url = `http://localhost:3000/sprints/${id}/order`;
+    let url = `/sprints/${id}/order`;
     axios.post(url, { order: moved.newIndex });
   }
 }

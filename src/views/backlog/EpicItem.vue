@@ -37,7 +37,7 @@
 
 <script lang="ts" setup>
 import { ref, computed } from "vue";
-import axios from "axios";
+import { axios } from "./axios";
 import type { Epic } from "./issue.model";
 import WkEditable from "@/components/form/WkEditable.vue";
 import IssueItem from "./IssueItem.vue";
@@ -69,7 +69,7 @@ function patchEpic(patch: Partial<Epic>) {
 
 async function updateEpicTitle() {
   let patch = { title: epicTitle.value };
-  await axios.patch("http://localhost:3000/epics/" + props.epic.id, patch);
+  await axios.patch("/epics/" + props.epic.id, patch);
   editable.value = false;
 }
 
@@ -79,33 +79,33 @@ function removeEpic(id: number) {
 
 async function createIssue() {
   const issue = { title: issueTitle.value };
-  let url = `http://localhost:3000/epics/${props.epic.id}/issues`;
+  let url = `/epics/${props.epic.id}/issues`;
   let { data } = await axios.post(url, issue);
   epicIssues.value = [...props.epic.issues, data];
   issueTitle.value = "";
 }
 
 async function removeIssue(id: number) {
-  await axios.delete("http://localhost:3000/issues/" + id);
+  await axios.delete("/issues/" + id);
   epicIssues.value = props.epic.issues.filter((i) => i.id !== id);
 }
 
 async function moveIssue({ moved, added, removed }: any) {
   if (added) {
     let { id } = added.element;
-    let url = `http://localhost:3000/backlog/epics/${props.epic.id}/issues/${id}`;
+    let url = `/backlog/epics/${props.epic.id}/issues/${id}`;
     axios.post(url, { order: added.newIndex });
   }
 
   if (removed) {
     let { id } = removed.element;
-    let url = `http://localhost:3000/backlog/epics/${props.epic.id}/issues/${id}/soft-remove`;
+    let url = `/backlog/epics/${props.epic.id}/issues/${id}/soft-remove`;
     axios.delete(url);
   }
 
   if (moved) {
     let { id } = moved.element;
-    let url = `http://localhost:3000/backlog/epics/${props.epic.id}/issues/${id}/order`
+    let url = `/backlog/epics/${props.epic.id}/issues/${id}/order`
     axios.post(url, { order: moved.newIndex });
   }
 }

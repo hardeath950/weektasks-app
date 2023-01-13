@@ -46,7 +46,7 @@
 </template>
 
 <script lang="ts" setup>
-import axios from "axios";
+import { axios } from "./axios";
 import { ref, computed } from "vue";
 import type { Sprint } from "./sprint.model";
 import WkEditable from "@/components/form/WkEditable.vue";
@@ -76,7 +76,7 @@ let editable = ref(false);
 
 async function updateSprintTitle() {
   let patch = { title: sprintTitle.value };
-  await axios.patch("http://localhost:3000/sprints/" + props.sprint.id, patch);
+  await axios.patch("/sprints/" + props.sprint.id, patch);
   editable.value = false;
 }
 
@@ -88,33 +88,33 @@ let issueTitle = ref("");
 
 async function createIssue() {
   let issue = { title: issueTitle.value };
-  let url = `http://localhost:3000/sprints/${props.sprint.id}/issues`;
+  let url = `/sprints/${props.sprint.id}/issues`;
   let { data } = await axios.post(url, issue);
   sprintIssues.value = [...props.sprint.issues, data];
   issueTitle.value = "";
 }
 
 async function removeIssue(id: number) {
-  await axios.delete("http://localhost:3000/issues/" + id);
+  await axios.delete("/issues/" + id);
   sprintIssues.value = props.sprint.issues.filter((i) => i.id !== id);
 }
 
 async function moveIssue({ moved, added, removed }: any) {
   if (added) {
     let { id } = added.element;
-    let url = `http://localhost:3000/sprints/${props.sprint.id}/issues/${id}`;
+    let url = `/sprints/${props.sprint.id}/issues/${id}`;
     axios.post(url, { order: added.newIndex });
   }
 
   if (removed) {
     let { id } = removed.element;
-    let url = `http://localhost:3000/sprints/${props.sprint.id}/issues/${id}`;
+    let url = `/sprints/${props.sprint.id}/issues/${id}`;
     axios.delete(url);
   }
 
   if (moved) {
     let { id } = moved.element;
-    let url = `http://localhost:3000/sprints/${props.sprint.id}/issues/${id}/order`;
+    let url = `/sprints/${props.sprint.id}/issues/${id}/order`;
     axios.post(url, { order: moved.newIndex });
   }
 }
