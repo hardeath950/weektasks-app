@@ -4,7 +4,7 @@ WORKDIR /home/weektasks-app
 COPY --chown=node:node package*.json ./
 RUN npm install
 COPY --chown=node:node . .
-RUN npm run build
+RUN npm run build-only
 ENV NODE_ENV production
 RUN npm ci --omit=dev && npm cache clean --force
 USER node
