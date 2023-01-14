@@ -1,3 +1,3 @@
 import Axios from "axios";
 
-export const axios = Axios.create({ baseURL: "http://54.207.84.45:3000" });
+export const axios = Axios.create({ baseURL: "http://15.228.246.220:3000" });
