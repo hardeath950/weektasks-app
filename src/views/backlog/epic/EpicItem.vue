@@ -22,10 +22,10 @@
 
 <script lang="ts" setup>
 import { ref, computed } from "vue";
-import { axios } from "./axios";
-import type { Epic } from "./issue.model";
+import { axios } from "../axios";
+import type { Epic } from "../issue.model";
 import WkEditable from "@/components/form/WkEditable.vue";
-import EpicIssues from "./epic/EpicIssues.vue";
+import EpicIssues from "./EpicIssues.vue";
 
 let props = defineProps<{
   epic: Epic;

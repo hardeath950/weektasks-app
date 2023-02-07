@@ -29,8 +29,8 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
 import { axios } from "../axios";
-import type { Epic } from "../issue.model";
-import IssueItem from "../IssueItem.vue";
+import type { Epic } from "../issue/issue.model";
+import IssueItem from "../issue/IssueItem.vue";
 import draggable from "vuedraggable";
 
 let props = defineProps<{

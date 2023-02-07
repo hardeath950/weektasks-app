@@ -17,7 +17,7 @@
 </template>
 
 <script lang="ts" setup>
-import { axios } from "./axios";
+import { axios } from "../axios";
 import { ref, computed } from "vue";
 import { Check, Edit } from "@element-plus/icons-vue";
 import type { Issue } from "./issue.model";

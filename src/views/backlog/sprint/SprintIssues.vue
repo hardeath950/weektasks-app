@@ -36,8 +36,8 @@
 <script setup lang="ts">
 import { axios } from "../axios";
 import { ref, computed } from "vue";
-import type { Sprint } from "../sprint.model";
-import IssueItem from "../IssueItem.vue";
+import type { Sprint } from "./sprint.model";
+import IssueItem from "../issue/IssueItem.vue";
 import draggable from "vuedraggable";
 
 let props = defineProps<{

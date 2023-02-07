@@ -22,12 +22,12 @@
 </template>
 
 <script lang="ts" setup>
-import { axios } from "./axios";
+import { axios } from "../axios";
 import { ref, computed } from "vue";
 import type { Sprint } from "./sprint.model";
 import WkEditable from "@/components/form/WkEditable.vue";
 import { ArrowDown } from "@element-plus/icons-vue";
-import SprintIssues from './sprint/SprintIssues.vue';
+import SprintIssues from './SprintIssues.vue';
 
 let props = defineProps<{
   sprint: Sprint;

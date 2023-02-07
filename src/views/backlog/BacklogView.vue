@@ -76,9 +76,9 @@
 
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-import EpicItem from "./EpicItem.vue";
-import IssueItem from "./IssueItem.vue";
-import SprintItem from "./SprintItem.vue";
+import EpicItem from "./epic/EpicItem.vue";
+import IssueItem from "./issue/IssueItem.vue";
+import SprintItem from "./sprint/SprintItem.vue";
 import draggable from "vuedraggable";
 import { axios } from "./axios";
 
