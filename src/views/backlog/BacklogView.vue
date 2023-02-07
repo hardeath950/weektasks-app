@@ -28,7 +28,7 @@
           </li>
         </template>
       </draggable>
-      <form @submit.prevent="createIssue">
+      <form @submit.prevent="createBacklogItem">
         <select v-model="issueTypeTarget">
           <option
             v-for="issueType in issueTypes"
@@ -97,23 +97,23 @@ async function fetchBacklog() {
   return data.map((issue) => issue.issueType === 'epic' ? asEpic(issue) : asIssue(issue));
 }
 
-async function createIssue() {
-  const issue = { title: issueTitle.value };
-  let response;
-
-  if (issueTypeTarget.value === "issue")
-    response = await axios
-      .post<any[]>("/backlog/issues", issue)
-      .then((res) => asIssue(res.data));
-
-  if (issueTypeTarget.value === "epic") {
-    response = await axios
-      .post<any[]>("/backlog/epics", issue)
-      .then((res) => asEpic(res.data));
-  }
-
-  issues.value.push(response);
+async function createBacklogItem() {
+  let createItemData = { title: issueTitle.value };
+  let item = issueTypeTarget.value === "issue"
+    ? await createIssue(createItemData)
+    : await createEpic(createItemData);
+  issues.value.push(item);
   issueTitle.value = "";
+}
+
+async function createIssue(item: any) {
+  let { data } = await axios.post<any[]>("/backlog/issues", item);
+  return asIssue(data);
+}
+
+async function createEpic(item: any) {
+  let { data } = await axios.post<any[]>("/backlog/epics", item);
+  return asEpic(data);
 }
 
 async function removeIssue(id: number) {
