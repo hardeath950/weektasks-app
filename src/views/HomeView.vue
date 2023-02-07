@@ -1,9 +1,5 @@
-<script setup lang="ts">
-import HelloWorld from "@/components/hello-world/HelloWorld.vue";
-</script>
-
 <template>
   <main>
-    <HelloWorld name="world" />
+    <router-link to="/backlog">Go to Backlog</router-link>
   </main>
 </template>
