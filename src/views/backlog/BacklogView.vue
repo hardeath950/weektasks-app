@@ -1,6 +1,8 @@
 <template>
   <main class="backlog">
     <div class="issues">
+      <b>Backlog</b>
+
       <draggable
         v-model="issues"
         item-key="id"
@@ -46,6 +48,8 @@
     </div>
 
     <div class="sprints">
+      <b>Sprints</b>
+
       <draggable v-model="sprints" item-key="id" tag="ul" group="sprints" @change="moveSprint">
         <template #item="{ element: sprint, index: i }">
           <li>
