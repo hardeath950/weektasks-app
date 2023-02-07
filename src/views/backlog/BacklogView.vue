@@ -164,21 +164,20 @@ function canMoveBacklogItemToSprint({ draggedContext, relatedContext }: any) {
 
 function moveBacklogItem({moved, added, removed}: any) {
   if (added) {
-    let { id } = added.element;
-    let url = `/backlog/issues/${id}`;
-    axios.post(url, { order: added.newIndex });
+    const { id } = added.element;
+    const item = { order: added.newIndex };
+    axios.post(`/backlog/issues/${id}`, item);
   }
 
   if (removed) {
-    let { id } = removed.element;
-    let url = `/backlog/issues/${id}/soft-remove`;
-    axios.delete(url);
+    const { id } = removed.element;
+    axios.delete(`/backlog/issues/${id}/soft-remove`);
   }
 
   if (moved) {
-    let { issueType, id } = moved.element;
-    let url = `/backlog/order/${issueType}/${id}`
-    axios.post(url, { order: moved.newIndex });
+    const { issueType, id } = moved.element;
+    const item = { order: moved.newIndex };
+    axios.post(`/backlog/order/${issueType}/${id}`, item);
   }
 }
 
