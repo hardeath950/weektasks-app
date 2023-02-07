@@ -34,6 +34,13 @@
             />
           </li>
         </template>
+        <template #footer v-if="sprintHasNoIssues">
+          <li class="issue">
+            <small>
+              <i>Mova uma questão aqui</i>
+            </small>
+          </li>
+        </template>
       </draggable>
       <form @submit.prevent="createIssue" class="create-issue">
         <input v-model="issueTitle" placeholder="Insira uma nova questão"/>
@@ -70,7 +77,9 @@ let sprintIssues = computed({
   set: (issues) => emit("update:sprint", { ...props.sprint, issues }),
 });
 
-let hideIssues = ref(true);
+let sprintHasNoIssues = computed(() => props.sprint.issues.length === 0);
+
+let hideIssues = ref(false);
 
 let editable = ref(false);
 
