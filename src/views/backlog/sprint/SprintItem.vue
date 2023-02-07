@@ -22,7 +22,7 @@
 </template>
 
 <script lang="ts" setup>
-import { axios } from "../../../axios/axios";
+import { axios } from "../../../axios";
 import { ref, computed } from "vue";
 import type { Sprint } from "./sprint.model";
 import WkEditable from "@/components/form/WkEditable.vue";
