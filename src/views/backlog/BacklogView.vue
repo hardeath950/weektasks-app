@@ -80,7 +80,7 @@ import EpicItem from "./epic/EpicItem.vue";
 import IssueItem from "./issue/IssueItem.vue";
 import SprintItem from "./sprint/SprintItem.vue";
 import draggable from "vuedraggable";
-import { axios } from "./axios";
+import { axios } from "../../axiosxios";
 
 const issues = ref<any[]>([]);
 const issueTitle = ref("");
