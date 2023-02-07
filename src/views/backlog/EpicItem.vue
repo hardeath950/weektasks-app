@@ -26,7 +26,7 @@
         </template>
       </draggable>
       <form @submit.prevent="createIssue" class="create-issue">
-        <input v-model="issueTitle" />
+        <input v-model="issueTitle" placeholder="Insira uma nova questão"/>
         <button>
           <el-icon><Plus /></el-icon>
         </button>

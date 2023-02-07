@@ -40,7 +40,11 @@
             {{ issueType === "issue" ? "Questão" : "Épica" }}
           </option>
         </select>
-        <input v-model="issueTitle" data-testid="issue-title-input" />
+        <input
+          v-model="issueTitle"
+          data-testid="issue-title-input"
+          :placeholder="`Crie uma nova ${issueTypeTarget === 'issue' ? 'questão' : 'épica'}`"
+        />
         <button data-testid="create-issue-btn">
           <el-icon><Plus /></el-icon>
         </button>
@@ -61,7 +65,7 @@
         </template>
       </draggable>
       <form @submit.prevent="createSprint" class="create-sprint">
-        <input v-model="sprintTitle" />
+        <input v-model="sprintTitle" placeholder="Crie uma nova sprint"/>
         <button>
           <el-icon><Plus /></el-icon>
         </button>
